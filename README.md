@@ -29,3 +29,9 @@ https://github.com/dabuntu/es/blob/master/EventshopJava/src/main/resources/Sql/E
 and the sql files in the following folder in the same order
 
 https://github.com/dabuntu/es/tree/master/EventshopJava/src/main/resources/Sql
+
+### Wiki
+
+The installation setup and a detailed description is available in the Wiki
+
+https://github.com/dabuntu/es/wiki
