@@ -1,0 +1,39 @@
+#include "spatial_analysis.h"
+#include "temporal_analysis.h"
+
+#include <ctime>
+
+#include <unistd.h>
+
+using namespace cv;
+
+int main()
+{
+	EmageIngestor ds360("/opt/sts-bundle/pivotal-tc-server-developer-3.0.0.RELEASE/base-instance/wtpwebapps/eventshoplinux/temp/ds360");
+	int rows0 = 0;
+	int cols0 = 0;
+	Mat mask0(rows0 , cols0 , CV_8U);
+	for(int i = 0; i < rows0; ++i)
+	{
+		for(int j = 0; j < cols0; ++j)
+		{
+			if(j <= 32 && j> 1 && i<=0 && i> -13)
+				mask0.at<unsigned char>(i, j) = 255;
+			else
+				mask0.at<unsigned char>(i, j) = 0;
+		}
+	}
+	FilterCondition fcond0(mask0, LT, -99999, 99999, 1423113934998, 9223372036854775807, true, 0, 100);
+	Filter Q18(ds360, fcond0);
+
+	while(true)
+	{
+		while(Q18.has_next())
+		{
+			Emage e = Q18.next();
+			create_output(e, "/opt/sts-bundle/pivotal-tc-server-developer-3.0.0.RELEASE/base-instance/wtpwebapps/eventshoplinux/temp/queries/Q18","");
+		}
+		sleep(100);
+	}
+	return 0;
+}

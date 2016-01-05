@@ -1,0 +1,1 @@
+ALTER TABLE  `Query_Master` CHANGE  `linked_ds`  `linked_ds` VARCHAR( 50 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL ;

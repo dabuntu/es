@@ -1,0 +1,1 @@
+ALTER TABLE  `Wrapper` CHANGE  `wrapper_key_value`  `wrapper_key_value` VARCHAR( 2000 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL ;

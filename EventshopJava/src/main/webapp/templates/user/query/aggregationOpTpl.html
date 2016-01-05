@@ -1,0 +1,87 @@
+
+<table style="width: 90%" id="aggregationOpValue">
+	<thead>
+		<th align="left" style="padding-right: 3%">&nbsp;</th>
+		<th align="right">&nbsp;</th>
+		<th align="left" style="padding-left: 5%"><input type="checkbox"
+			name="normBounds" id="normBounds" checked> Value
+			Normalization</th>
+		<th align="left">Aggregation Operator</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="2">
+				<div style="margin-top: -40px">
+
+					<h6>&nbsp;&nbsp;All DS
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+						DS</h6>
+					<select class="multi" multiple
+						style="width: 100%; margin-top: 30px" id="aSource">
+						<option value="">None</option>
+					</select>
+
+				</div>
+			</td>
+			<td style="padding-left: 2%">
+				<table>
+					<tbody>
+						<tr>
+							<td valign="top" style="padding-left: 10%">Min
+								Value:&nbsp;&nbsp;<input id="aggNormMin" type="text"
+								style="width: 40%" placeholder="0" />
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" style="padding-left: 10%">Max Value:&nbsp;<input
+								id="aggNormMax" type="text" style="width: 40%" placeholder="100" />
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</td>
+			<td style="padding-bottom: 5%"><select style="width: 100%"
+				id="aggBy">
+					<option value="A1" selected="">Avg</option>
+					<option value="A2">Max</option>
+					<option value="A3">Min</option>
+					<option value="A4">Sum</option>
+					<option value="A5">Average</option>
+					<option value="A6">Subtraction</option>
+					<option value="A7">Multiplication</option>
+					<option value="A8">Division</option>
+					<option value="A9">And</option>
+					<option value="A10">Or</option>
+					<option value="A11">Not</option>
+					<option value="A12">Xor</option>
+					<option value="A13">Convolution</option>
+			</select></td>
+		</tr>
+		<tr>
+			<td>
+				<button class="btn btn-small btn-inverse" style="margin-top: 15%"
+					id="aggrQuery" name="aggr"
+					onclick="queryGraphStart('aggr','aSource')">create Query</button> <!--<input type="button" value="create Query"  class="btn btn-small btn-inverse" style="margin-top:15%" id="aggrQuery" name="aggr" onclick="queryGraphStart('aggr','aSource')"/>-->
+			</td>
+			<td></td>
+		</tr>
+		</tr>
+	</tbody>
+</table>
+
+</td>
+</tr>
+</tbody>
+</table>
+<script type="text/javascript">
+  /*
+   $(function() {	 
+		    
+		    $('#aSource').multiSelect({
+		    	 selectableHeader: '<div class="custom-header">All DS</div>',
+			    selectionHeader: '<div class="custom-header">Selected DS</div>',
+			});
+		    console.log("done woith multiA");
+		  }); */
+</script>

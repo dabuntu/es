@@ -1,0 +1,234 @@
+
+
+<script>
+        function codeAddress() {
+        var address = document.getElementById("placeName").value;
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          var location = results[0].geometry.location;
+          //alert('LAT: ' + location.lat() + ' LANG: ' + location.lng());
+
+          var latitude=location.lat();
+          var longitude= location.lng();
+          var latlong= latitude+","+longitude;
+
+          document.getElementById("latlong2").value=latlong;
+          document.getElementById("latlong2").innerHTML=latlong;
+          //alert($('#latlong2').val()+"is vall1");
+
+        });
+        }
+        
+    </script>
+
+<table style="width: 102%" id="filterValues">
+
+	<tr>
+		<td valign="top">
+			<div class="nonsense" style="margin-top: -17px">
+				<h6>&nbsp;&nbsp;All DS
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+					DS</h6>
+
+				<!-- <select class="form-control " id="newSource"  style="width:90%">
+  		 <option value="">None</option>
+  		 </select> -->
+
+				<select class="multi" multiple style="width: 90%" id="sSource">
+					<option value="">None</option>
+				</select>
+
+
+			</div>
+
+		</td>
+
+		<td valign="top">
+			<input id="valBound" type="checkbox" name="bounds" value="bounds" checked>
+			&nbsp; Specify Value Bounds <br />
+
+			Min Value:&nbsp;&nbsp;
+			<input id="valRangeMin" type="text" style="width: 30%" placeholder="-99999" />
+			<br /> Max Value:&nbsp;
+			<input id="valRangeMax" type="text" style="width: 30%" placeholder="999999" />
+			<br /> <br />
+			<input id="normVal" type="checkbox" name="bounds" value="bounds" checked> &nbsp; Value Normalization <br />
+			Min Value:&nbsp;&nbsp;
+			<input id="normValsMin" type="text" style="width: 40%;" placeholder="0" /> <br /> Max Value:&nbsp;
+			<input id="normValsMax" type="text" style="width: 40%" placeholder="100" />
+
+		</td>
+
+		<td valign="top">Specify Temporal Bounds In <br /> <select
+			id="temporalBoundsInMethod" onchange="showSelectedval(this.value)">
+				<option value="-1" selected="selected">select</option>
+				<option value="1">Relative Mode</option>
+				<option value="2">Absolute Mode</option>
+
+		</select> <br />
+
+			<div id="showdiv1" style="display: none;">
+				<h6>Time Range Relative to now :</h6>
+
+				Time window before now(seconds)<br /> <input id="timeRangeSecs"
+					type="text" name="name" value=""
+					placeholder="Enter Time in seconds">
+
+			</div>
+
+			<div id="showdiv2" style="display: none; height: 157px;">
+				<h6>Absolute Time Range</h6>
+				 <!--<table align="center">
+			<tr>
+				<td>Start Date :<br />
+				<div id="datepicker" class="input-append date">
+				<input type="text"  data-format="dd/MM/yyyy hh:mm:ss" name="timeRangeStart" >
+				<span class="add-on">
+      <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      </i>
+    </span>
+    </div>
+	</td>
+	</tr>
+			<tr>
+				<td>End Date :<br /><div id="datepicker1" class="input-append date">
+				<input type="text"   data-format="dd/MM/yyyy hh:mm:ss" name="timeRangeEnd" >
+				<span class="add-on">
+      				<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+      				</i>
+    				</span>
+			</div>
+			</td>
+			</tr>
+		</table>-->
+				<table align="center">
+					<tr>
+						<td >Start Date :<br />
+							<input id="startDateFilter" data-format="DD:MM:YYYY HH:mm:ss" type='text' class="form-control" name="timeRangeStart" placeholder="Enter Start Date"/>
+						</td>
+
+					</tr>
+					<tr>
+						<td>End Date :<br />
+							<input id="endDateFilter" data-format="DD:MM:YYYY HH:mm:ss" type="text" name="timeRangeEnd" value="" placeholder="Enter End Date">
+						</td>
+
+					</tr>
+				</table>
+				<script type="text/javascript">
+            		$(function () {
+                		$('#startDateFilter,#endDateFilter').datetimepicker({format: 'DD:MM:YYYY HH:mm:ss'});
+            		});
+				</script>
+
+
+
+			</div>
+
+
+
+			<div style="width: 234px;">
+
+				Select Input Approach of Spatial Mask <br /> <select
+					id="maskMethodVal" onchange="showSelected(this.value)">
+					<option value="-1">select</option>
+					<option value="3"
+						onclick="window.open('longlat4.html', '_blank', 'toolbar=0,location=0,menubar=0,width=640,height=480');">Select
+						on Map</option>
+					<option value="4">By place Name</option>
+					<option value="5">Upload Matrix file</option>
+
+				</select> <br />
+
+				<div id="showdivision4" style="display: none;">
+					<h6>Place Name</h6>
+					Enter City:<input type="text" id="placeName" value=""
+						placeholder="label/Address/Name" onmouseout="codeAddress(this)">
+					Latitude & Longitude:<input type="text" id="latlong2"
+						name="latlong2" value="">
+				</div>
+				<div id="showdivision5" style="display: none;">
+					<h6>Select Matrix file</h6>
+					<input type="file" name="filepath" title="Search for a file to add"
+						id="filterfilef" />
+
+				</div>
+			</div>
+
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			<button class="btn btn-small btn-inverse" id="filterQuery"
+				name="filter" onclick="queryGraphStart('filter','sSource')">Create
+				Query</button>
+		</td>
+	</tr>
+
+</table>
+
+
+<div id="file_data_st" style="display: none"></div>
+<input id="map_data" type="hidden" value="">
+
+<script>
+// Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+	
+} else {
+  alert('The File APIs are not fully supported by your browser.');
+}
+
+function readSingleFiles(evt,id) { 
+	//Retrieve the first (and only!) File from the FileList object
+   console.log("inside readSinglefile");
+    var f = evt.files[0]; 
+
+    if (f) {
+          console.log("inside file reader");     
+      var r = new FileReader();
+      r.onload = function(e) { 
+                      var contents = e.target.result;
+                      
+                      //console.log($("#file_data_"+id).html(contents));
+                      console.log(contents);
+                      console.log("#file_data_"+id);
+                      console.log($("#file_data_"+id));
+                       $("#file_data_"+id).html(contents);
+                       console.log("hello inside content");
+        //alert( "Got the file" 
+              //+"name: " + f.name + "n"
+              //+"type: " + f.type + "n"
+              //+"size: " + f.size + " bytesn"
+             // + "starts with: " + contents.substr(1, contents.indexOf("n"))
+       // );  
+      }
+     //alert(r.result);
+                r.readAsBinaryString(f);  //readAsBinaryString(file)
+    } else { 
+      alert("Failed to load file");    
+    }
+    //alert(contents);             
+    //getcontent(f);
+  }
+function getcontent(e){ //alert(e); 
+
+file = fopen(e);
+file_length = flength(file);
+content = fread(file, file_length);
+//document.getElementById("myDiv").innerText = content;          
+
+}
+
+ var rr=document.getElementById('filterfilef').addEventListener('change', function(){readSingleFiles(this,'st')}, false);
+
+ var r4 =  $('#file_data_st').html();
+
+</script>
+
+<!-- End of read file -->
+
+
+

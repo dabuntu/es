@@ -1,0 +1,80 @@
+<div>
+
+	<div style="margin-left: 15%">
+
+		<div class="container" style="margin-top: 10px">
+
+			<h4 style="margin-top: 4%">Sign Up</h4>
+			<table>
+				<thead>
+				</thead>
+				<tr>
+					<td class="alignRight"><i class="required">*</i>Email-Id</td>
+					<td><input type="text" class="input-block-level"
+						id="userMailId"></td>
+				</tr>
+				<tr>
+					<td class="alignRight"><i class="required">*</i>Password</td>
+					<td><input type="password" class="input-block-level"
+						id="userPWD"></td>
+				</tr>
+
+
+				<tr>
+					<td class="alignRight"><i class="required">*</i>Full Name</td>
+					<td><input type="text" class="input-block-level" id="userName">
+					</td>
+				</tr>
+
+				<tr>
+					<td class="alignRight"><i class="required">*</i>Gender</td>
+					<td>Male <input type="radio" name="two" class="dataradio"
+						checked="checked" value="M">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Female <input
+						type="radio" name="two" class="dataradio" value="F">
+					</td>
+				</tr>
+				<!-- 
+<tr>
+<td class="alignRight" style="padding-top:10px">
+<i class="required">*</i>Authentication 
+</td>
+
+<td style="padding-top:10px">
+  <input type="password" class="input-block-level" id="userAuthen">
+</td>
+</tr>
+ -->
+				<input type="hidden" name="userAuthen" id="userAuthen"
+					value="123456789" />
+
+				<!--  <tr>
+<td class="alignRight" style="padding-top:10px">
+<i class="required">*</i>Role
+</td>
+<td style="padding-top:10px">
+  <select id = "role">
+  <option value = "1">Admin</option>
+  <option value = "2">Normal User</option>
+ </select>
+</td>
+</tr> -->
+
+				<input type="hidden" name="role" id="role" value="2" />
+
+
+				<tr>
+				</tr>
+				<tr>
+					<td class="aligntop"><input type=button value='Create'
+						class="btn btn-primary" id="createUser"></td>
+					<td class="aligntop"><input type=button value='Cancel'
+						class="btn btn-primary" id="cancelUser"></td>
+
+				</tr>
+
+			</table>
+
+		</div>
+	</div>
+</div>

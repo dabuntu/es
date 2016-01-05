@@ -1,0 +1,31 @@
+{
+  "theme": "AkkaTest_IP",
+  "startTime": "1433144100",
+  "endTime": "1433144400",
+  "startTimeStr": "Mon Jun  1 13:10:00 2015",
+  "endTimeStr": "Mon Jun  1 13:10:00 2015",
+  "min": "33",
+  "max": "141.5",
+  "latUnit": 0.5,
+  "longUnit": 0.5,
+  "swLat": 24,
+  "swLong": -125,
+  "neLat": 25,
+  "neLong": -124,
+  "row": 3,
+  "col": 3,
+  "value": "255",
+  "colors": [],
+  "image": [
+    141.5,
+    33,
+    0,
+    99,
+    55,
+    0,
+    0,
+    0,
+    0
+  ],
+  "mapEnabled": "true"
+}

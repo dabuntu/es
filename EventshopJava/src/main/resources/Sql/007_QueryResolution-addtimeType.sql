@@ -1,0 +1,1 @@
+ALTER TABLE Query_Master ADD timeType INT NOT NULL DEFAULT 0;

@@ -1,0 +1,1 @@
+ALTER TABLE  `Datasource_Master` ADD  `dsmaster_syntax` VARCHAR( 500 ) NOT NULL ;

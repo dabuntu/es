@@ -1,0 +1,230 @@
+
+<table style="width: 100%" id="temporalPatternValue">
+	<thead>
+		<th align="left" style="padding-right: 1%">&nbsp;</th>
+		<th align="left" style="padding-right: 1%">&nbsp;</th>
+		<th align="left" style="padding-left: 1%">Normalize Pattern</th>
+		<th align="left" style="padding-left: 1%">Normalize pattern value
+		</th>
+		<th align="left" style="padding-left: 1%">Time Window</th>
+		<th align="left">Select Pattern Source</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="width: 30%;" colspan="2" valign="top">
+				<div style="margin-top: -39px">
+					<h6>&nbsp;&nbsp;All DS
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+						DS</h6>
+					<select class="multi" multiple style="width: 100%" id="tSource">
+						<option value="">None</option>
+					</select>
+				</div>
+			</td>
+			<td style="padding-left: 1%; padding-bottom: 5%" valign="top"><select
+				style="width: 80%" id="tp_norm_pattern">
+					<option value="d1">True</option>
+					<option value="d2">False</option>
+			</select></td>
+			<td style="padding-left: 1%; padding-bottom: 5%" valign="top"><select
+				style="width: 60%" id="tp_norm_value">
+					<option value="d1">True</option>
+					<option value="d2">False</option>
+			</select></td>
+			<td style="padding-left: 1%; padding-bottom: 5%" valign="top"><input
+				type="text" style="width: 30%" placeholder="60" id="tp_time_window" />
+			</td>
+			<td align="left" style="padding-left: 1%; padding-bottom: 5%"><select
+				style="width: 70%" onchange="showSelected(this.value)"
+				id="tp_pattern_type">
+					<option value="-1">select</option>
+					<option value="12">Input from file</option>
+					<option value="13">Create new</option>
+			</select>
+
+				<div id="showdivision12" style="display: none;">
+					<input type="file" name="temporalPatternInputFile"
+						id="temporalPatternInputFile" />
+				</div>
+
+
+				<div id="showdivision13" style="display: none;">
+					<table>
+						<tr>
+							<td valign="middle">Pattern Sampling Rate(seconds)</td>
+							<td><input type="text" name="tp_samp_rate" id="tp_samp_rate"
+								style="width: 60%" placeholder="1.0" /></td>
+						</tr>
+						<tr>
+							<td valign="middle">Pattern Duration(seconds)</td>
+							<td><input type="text" name="tp_samp_dur" id="tp_samp_dur"
+								style="width: 60%" placeholder="10" /></td>
+						</tr>
+						<tr>
+							<td valign="top">Select Temporal Pattern</td>
+							<td><select style="width: 70%"
+								onchange="showSelectedInsideDivs(this.value)"
+								id="prtn_ln_exp_per">
+									<option value="-1">select</option>
+									<option value="14">Linear</option>
+									<option value="15">Exponential</option>
+									<option value="16">Periodic</option>
+							</select>
+
+								<div id="showdivision14" style="display: none;">
+
+									<table>
+										<tr>
+											<td>Slope:</td>
+											<td><input type="text" style="width: 33%" id="ln_slope"
+												placeholder="1.0"></td>
+										</tr>
+										<tr>
+											<td>Y-Intercept:</td>
+											<td><input type="text" style="width: 33%"
+												id="ln_intercept" placeholder="10"></td>
+										</tr>
+									</table>
+
+								</div>
+
+								<div id="showdivision15" style="display: none;">
+
+									<table>
+										<tr>
+											<td>Base Value:</td>
+											<td><input type="text" style="width: 33%"
+												id="exp_base_value" placeholder="2.0"></td>
+										</tr>
+										<tr>
+											<td>Scale Factor:</td>
+											<td><input type="text" style="width: 33%"
+												id="exp_scale_factor" placeholder="1.0"></td>
+										</tr>
+									</table>
+
+								</div>
+
+								<div id="showdivision16" style="display: none;">
+
+									<table>
+										<tr>
+											<td>Frequency:</td>
+											<td><input type="text" style="width: 33%" id="pr_frq"
+												placeholder="1.0"></td>
+										</tr>
+										<tr>
+											<td>Amplitude:</td>
+											<td><input type="text" style="width: 33%"
+												id="pr_amplitude" placeholder="1.0"></td>
+										</tr>
+										<tr>
+											<td>Phase Delay:</td>
+											<td><input type="text" style="width: 33%"
+												id="pr_phase_delay" placeholder="0.0"></td>
+										</tr>
+									</table>
+
+								</div></td>
+						</tr>
+
+					</table>
+				</div></td>
+
+		</tr>
+		<tr>
+			<td>
+				<button class="btn btn-small btn-inverse" style="margin-top: 15%"
+					id="tpmatchingQuery" name="tpmatching"
+					onclick="queryGraphStart('temporal','tSource')">create
+					Query</button> <!--<input type="button" value="create Query" class="btn btn-small btn-inverse" style="margin-top:15%" id="tpmatchingQuery" name="tpmatching" onclick="queryGraphStart('temporal','tSource')"/>-->
+			</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+ /*
+   $(function() {	 
+		    
+		    $('.multiTT').multiSelect({
+		    	 selectableHeader: 'All DS',
+				    selectionHeader: 'Selected DS'
+			});
+		    console.log("done woith multiTT");
+		  });*/
+</script>
+
+<!-- for reading the file -->
+
+
+<div id="file_data1_temporal" style="display: none"></div>
+
+<script>
+// Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+
+} else {
+  alert('The File APIs are not fully supported by your browser.');
+}
+
+function readSingleFilesss(evt,id) { 
+	//Retrieve the first (and only!) File from the FileList object
+    
+    var f = evt.files[0]; 
+
+    if (f) {
+               
+      var r = new FileReader();
+      r.onload = function(e) { 
+                      var contents = e.target.result;
+                      
+                    
+                       $("#file_data1_"+id).html(contents);
+                       console.log("file_data1_temporal patterns"+contents);
+        //alert( "Got the file" 
+              //+"name: " + f.name + "n"
+              //+"type: " + f.type + "n"
+              //+"size: " + f.size + " bytesn"
+             // + "starts with: " + contents.substr(1, contents.indexOf("n"))
+       // );  
+      }
+     //alert(r.result);
+                r.readAsBinaryString(f);  //readAsBinaryString(file)
+    } else { 
+      alert("Failed to load file");    
+    }
+    //alert(contents);             // getcontent(f);
+  }
+function getcontent(e){ //alert(e); 
+
+	 alert("renuuu");
+file = fopen(e);
+file_length = flength(file);
+content = fread(file, file_length);
+//document.getElementById("myDiv").innerText = content;          
+
+
+}
+  
+ 
+ var rr=document.getElementById('temporalPatternInputFile').addEventListener('change', function(){readSingleFilesss(this,'temporal')}, false);
+ 
+ var r4 =  $('#file_data1_temporal').html();
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+</script>
+
+<!-- End of read file -->
+
+
+
+
+

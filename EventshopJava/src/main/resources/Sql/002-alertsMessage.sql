@@ -1,0 +1,1 @@
+ALTER TABLE Alerts ADD alert_message VARCHAR(200);

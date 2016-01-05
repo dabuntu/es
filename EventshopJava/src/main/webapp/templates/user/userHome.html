@@ -1,0 +1,1868 @@
+<script>
+
+$(document).ready(function () {
+        customQueryFunction();
+        //multiselectRestructure();
+    });
+
+    window.addEventListener("load", function () {
+    setTimeout(function () {
+    multiselectRestructure();
+    }, 1000);
+}, false);
+
+
+//for restructured multiselect of query operators
+var dsRuleOptions = '';
+    function multiselectRestructure() {
+    var userId = '';
+
+    userId = $('#userId').val();
+  	console.log("userId: " + userId);
+
+
+    	$.ajax({
+        type: "GET",
+        url: "/eventshoplinux/webresources/uiRuleService/getUserDatasourceAndRules" ,
+        data: { "userId": userId }
+        }).done(function(output){
+           	console.log("obj is :::  "+JSON.stringify(output));
+           	var r_temp = JSON.parse(JSON.stringify(output));
+           	$.each(r_temp, function(i, obj) {
+
+	            	dsRuleOptions += '<option value="rule'+obj['ruleID']+'">DS'+obj['dataSourceID']+':'+obj['dataSourceName']+'::Rule'+obj['ruleID']+':'+obj['ruleName']+'</option>';
+	            });
+	            $('#sSource').html(dsRuleOptions);
+	            $('#sSource').multiSelect('refresh');
+	            $('#gSource').html(dsRuleOptions);
+	            $('#gSource').multiSelect('refresh');
+	            $('#aSource').html(dsRuleOptions);
+	            $('#aSource').multiSelect('refresh');
+	            $('#pSource').html(dsRuleOptions);
+	            $('#pSource').multiSelect('refresh');
+	            $('#tSource').html(dsRuleOptions);
+	            $('#tSource').multiSelect('refresh');
+	            $('#spaceCharSource').html(dsRuleOptions);
+	            $('#spaceCharSource').multiSelect('refresh');
+	            $('#tempCharSource').html(dsRuleOptions);
+	            $('#tempCharSource').multiSelect('refresh');
+
+
+
+        }).fail( function(jqXHR, textStatus, errorThrown,output){
+         	console.log("Could not stop query "+jqXHR);
+       	   	console.error(errorThrown);
+        });
+
+    }
+
+//
+
+
+
+
+
+
+//for custom query
+
+var userId;
+var dsFields = {};
+var fieldOperators = {};
+var resultObject = {};
+var extractedDsFields = '';
+var ds;
+var rules = [];
+var addCount = 0;
+
+    function customQueryFunction(){
+		$.ajax({
+        type: "GET",
+        url: "/eventshoplinux/webresources/uiRuleService/allDSSyntax",
+        data: { "type": "getAll"}
+        }).done(function(output){
+           	var obj = JSON.stringify(output);
+
+           	for (i = 0; i < output.result.length; i++) {
+           	var dsKey = 'ds' + output.result[i].dataSource;
+			var dsVal = [];
+
+
+            	for (key in output.result[i].syntaxAndOperators) {
+					fieldOperators[key] = output.result[i].syntaxAndOperators[key];
+					dsVal.push(key);
+            	}
+            	dsFields[dsKey]=dsVal;
+
+        	}
+        	<!--console.log(JSON.stringify(dsFields));-->
+        	<!--console.log(JSON.stringify(fieldOperators));-->
+
+        }).fail( function(jqXHR, textStatus, errorThrown,output){
+         	console.log("Could not stop query "+jqXHR);
+       	   	console.error(errorThrown);
+        });
+	}
+
+	function submitCustomQuery(){
+    	var type = $('#submitCustomQuery').val();
+    	var temp_data = JSON.parse($('#finalQueryText').val());
+    	temp_data['ruleName']= $('#ruleName').val();
+    	temp_data['userId']= $('#userId').val();
+    	console.log("userId is " + temp_data.userId);
+    	var data = JSON.stringify(temp_data);
+
+    	if (type == "Save") {
+
+    		$.ajax({
+    	    type: "PUT",
+    	    url: "/eventshoplinux/rest/rulewebservice/rule",
+    	    contentType: "application/json; charset=utf-8",
+    	    data: data
+
+    	    }).done(function(output){
+
+    	    	console.log(JSON.stringify(output));
+
+    	    }).fail( function(jqXHR, textStatus, errorThrown,output){
+    	     	console.log("Could not stop query "+jqXHR);
+    	   	   	console.error(errorThrown);
+    	    });
+
+    	} else {
+
+    	    $.ajax({
+    	    type: "POST",
+    	    url: "/eventshoplinux/rest/rulewebservice/rule",
+    	    contentType: "application/json; charset=utf-8",
+    	    data: data
+
+    	    }).done(function(output){
+
+    	    	console.log(JSON.stringify(output));
+
+    	    }).fail( function(jqXHR, textStatus, errorThrown,output){
+    	     	console.log("Could not stop query "+jqXHR);
+    	   	   	console.error(errorThrown);
+    	    });
+    	}
+
+        resetValues();
+    }
+
+
+    function getDsFields(value) {
+
+        if (value.length == 0) document.getElementById("customQueryDsFields").innerHTML = "<option></option>";
+        else {
+        $("#customQueryDS").prop("disabled", true);
+            var fieldOptions = "<option>None</option>";
+
+            for (i = 0; i < dsFields[value].length; i++) {
+                fieldOptions += "<option>" + dsFields[value][i] + "</option>";
+            }
+            document.getElementById("customQueryDsFields").innerHTML = fieldOptions;
+            document.getElementById("extractFields").innerHTML = fieldOptions;
+        }
+    }
+
+    function getFieldOperators(value) {
+        if (value.length == 0) document.getElementById("customQueryDsFieldOperators").innerHTML = "<option></option>";
+        else {
+            var fieldOptions = "<option>None</option>";
+            for (i = 0; i < fieldOperators[value].length; i++) {
+                fieldOptions += "<option>" + fieldOperators[value][i] + "</option>";
+            }
+            document.getElementById("customQueryDsFieldOperators").innerHTML = fieldOptions;
+        }
+    }
+
+
+	function setValues(){
+
+		addCount = addCount + 1;
+    	if(addCount < 2) {
+    	var d = document.getElementById("customQueryDS");
+		ds = d.options[d.selectedIndex].text;
+		resultObject["source"] = ds;
+        $("#extractFields option:selected").each(function(){
+        	extractedDsFields += $(this).val() + ",";
+        });
+        resultObject["extractFields"] = extractedDsFields;
+        } else {
+        	delete resultObject["rules"];
+        }
+		var Object = {};
+		var f = document.getElementById("customQueryDsFields");
+		Object['dataField'] = f.options[f.selectedIndex].text;
+		var g = document.getElementById("customQueryDsFieldOperators");
+		Object['ruleOperator'] = g.options[g.selectedIndex].text;
+		Object['ruleParameters'] = $('#queryParams').val();
+		rules.push(Object);
+		resultObject["rules"] = rules;
+		document.getElementById("finalQueryText").innerHTML = JSON.stringify(resultObject);
+
+		$("#extractFields").prop("disabled", true);
+		$("#customQueryDsFields option:eq(0)").prop("selected", true);
+		$("#customQueryDsFieldOperators option:eq(0)").prop("selected", true);
+		$('#queryParams').val('');
+
+    }
+
+    function resetValues() {
+    	$("#customQueryDS").prop("disabled", false);
+		$("#extractFields").prop("disabled", false);
+		$("#customQueryDS option:eq(0)").prop("selected", true);
+		document.getElementById("extractFields").innerHTML = "<option>None</option>";
+		document.getElementById("customQueryDsFields").innerHTML = "<option>None</option>";
+		document.getElementById("customQueryDsFieldOperators").innerHTML = "<option>None</option>";
+		$('#queryParams').val('');
+		$('#finalQueryText').val('');
+		$('#ruleName').val('');
+	}
+
+//
+
+	$(function() {
+
+		$("#accordion").accordion({
+			active : true,
+			collapsible : true,
+			autoHeight : false,
+			navigation : true
+
+		});
+	});
+
+	$(function() {
+
+		var availableTags = [ "Name2", "Name3", "Name4", "Name5", "Name6" ];
+
+		$("#regquerySearch").autocomplete({
+			source : availableTags
+		});
+	});
+
+	$(function() {
+
+		var availableTags = [ "Name2", "Name3", "Name4", "Name5", "Name6" ];
+
+		$("#dsSearch").autocomplete({
+			source : availableTags
+		});
+	});
+
+	$(function() {
+
+		var availableTags = [ "Name2", "Name3", "Name4", "Name5", "Name6" ];
+
+		$("#regalertSearch").autocomplete({
+			source : availableTags
+		});
+	});
+
+function ViewDataFormatInfo(value)
+{
+
+
+	if(value=="xml")
+	{
+		document.getElementsByName("key-value_pair")[0].value
+		= '{"datasource_type":"point", "spatial_wrapper":"sum", "isList":false, "rootElement": "", "tokenizeElement": "", "lat_path" :"", "lon_path":"", "val_path":"","date_time_path":"", "date_time_format":""}';
+		document.getElementsByName("key-value_pair")[1].value
+		= '{"datasource_type":"point", "spatial_wrapper":"sum", "isList":false, "rootElement": "", "tokenizeElement": "", "lat_path" :"", "lon_path":"", "val_path":"","date_time_path":"", "date_time_format":""}';
+
+	} else if(value=="json")
+	{
+		document.getElementsByName("key-value_pair")[0].value
+		= '{"datasource_type": "point","spatial_wrapper": "sum","isList": true,"rootElement": "","tokenizeElement": "list","lat_path": "coord.lat","lon_path": "coord.lon","val_path": "wind.speed","date_time_path": "dt","date_time_format": "Long","queryParams": [{"lat": "38.903858","lon": "-105.644531","radius": "40"}]}';
+		document.getElementsByName("key-value_pair")[1].value
+		= '{"datasource_type": "point","spatial_wrapper": "sum","isList": true,"rootElement": "","tokenizeElement": "list","lat_path": "coord.lat","lon_path": "coord.lon","val_path": "wind.speed","date_time_path": "dt","date_time_format": "Long","queryParams": [{"lat": "38.903858","lon": "-105.644531","radius": "40"}]}';
+
+	} else if(value=="csvField"){
+
+		document.getElementsByName("key-value_pair")[0].value = '{"datasource_type":"point", "spatial_wrapper":"sum", "lat_index" :0, "lon_index":1, "val_index":2,"date_time_index":"3", "date_time_format":""}';
+		document.getElementsByName("key-value_pair")[1].value = '{"datasource_type":"point", "spatial_wrapper":"sum", "lat_index" :0, "lon_index":1, "val_index":2,"date_time_index":"3", "date_time_format":""}';
+
+	} else if(value=="csvArray"){
+		document.getElementsByName("key-value_pair")[0].value	= '{"datasource_type":"point", "spatial_wrapper":"sum", "lat_index" :0, "lon_index":1, "val_index":2}';
+		document.getElementsByName("key-value_pair")[1].value	= '{"datasource_type":"point", "spatial_wrapper":"sum", "lat_index" :0, "lon_index":1, "val_index":2}';
+
+	} else if(value=="visual"){
+		document.getElementsByName("key-value_pair")[0].value	= '{"color_matrix":"", "translation_matrix":""}';
+		document.getElementsByName("key-value_pair")[1].value	= '{"color_matrix":"", "translation_matrix":""}';
+
+	}
+}
+
+
+
+</script>
+
+
+<div id="main">
+	<div class="navbar navbar-inverse navbar-fixed-top">
+
+		<div class="navbar-inner">
+			<div class="container">
+
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-cog"></i></a>
+
+				<div class="nav-collapse collapse">
+
+					<ul class="nav pull-right">
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="logout()">Logout</a></li>
+					</ul>
+					<ul class="nav pull-right">
+						<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<i class="icon-cog"></i> Settings<b class="caret"></b>
+						</a>
+							<ul class="dropdown-menu">
+								<li><a href="javascript:alert('Coming soon');" id="showEditUser">Edit Profile</a></li>
+								<li class="divider"></li>
+								<li><a href="javascript:alert('Coming soon');">Help</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav pull-right">
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							style="pointer-events: none;">Welcome <%=UName%></a></li>
+					</ul>
+
+				</div>
+				<!--/.nav-collapse -->
+
+			</div>
+			<!-- /container -->
+			<input id="userId" type="hidden"/>
+		</div>
+		<!-- /navbar-inner -->
+
+	</div>
+	<!-- /navbar -->
+</div>
+<!-- divclosed -->
+
+
+
+<div class="main">
+	<div class="container" style="margin-top: 30px">
+		<div class="row">
+			<div class="span5" style="height: 100%">
+				<div class="widget">
+					<div class="widget-header">
+						<h5 style="margin-top: 3%; margin-left: 3%">Registered Queries</h5>
+					</div>
+					<!-- /widget-header -->
+					<div class="widget-content">
+						<div style="margin-top: -18px">
+							<table>
+								<tr>
+									<td>
+									<input name="filter" onkeyup="filter(this, 'queryTable', 1)" type="text"
+										placeholder="Query Name" style="width: 90%"
+										id="regquerySearch" onkeypress="mapChangePress(event)">
+									</td>
+									<td><select id="IdList" style="width: 105%">
+											<option value="select">ID</option>
+											<option value="d1">D1</option>
+											<option value="d2">D2</option>
+											<option value="d3">D3</option>
+									</select></td>
+								</tr>
+							</table>
+						</div>
+						<div id="queryTableContainer" style="height: 375px"></div>
+
+						<div id="paginationQ"></div>
+					</div>
+
+					<!-- /widget-content for registered queries-->
+
+
+
+
+					<div class="widget-header" style="margin-top: 2%;">
+						<h5 style="margin-top: 3%; margin-left: 3%">
+							Registered Rules
+							<!--<img src='imgs/add.jpg'-->
+														 <!--style="height: 18px; width: 16; padding-left: 3px; cursor: pointer"-->
+														 <!--id="imgaddDS" alt="Add Data Source" title="Add Data Source">-->
+						</h5>
+					</div>
+					<!-- /widget-header -->
+					<div class="widget-content" style="padding: 51px 5px;">
+						<div>
+							<table align="center">
+								<tr>
+									<td style="margin-top: 0"><input name="filter"
+																	 onkeyup="filter(this, 'ruleTable', 1)" type="text"
+																	 placeholder="Rule Name" style="width: 90%"
+																	 id="ruleSearch"></td>
+									<td style="margin-top: 0"><select id="IdList"
+																	  style="width: 105%">
+										<option value="select">Name</option>
+
+									</select></td>
+								</tr>
+							</table>
+						</div>
+						<div id="ruleTableContainer"></div>
+
+						<div id="paginationR"></div>
+
+					</div>
+					<!-- /widget-content for registered rules-->
+
+
+
+					<div class="widget-header" style="margin-top: 2%;">
+						<h5 style="margin-top: 3%; margin-left: 3%">
+							Registered Data Sources <img src='imgs/add.jpg'
+								style="height: 18px; width: 16; padding-left: 3px; cursor: pointer"
+								id="imgaddDS" alt="Add Data Source" title="Add Data Source">
+						</h5>
+					</div>
+					<!-- /widget-header -->
+					<div class="widget-content" style="padding: 51px 5px;">
+						<div>
+							<table align="center">
+								<tr>
+									<td style="margin-top: 0"><input name="filter"
+										onkeyup="filter(this, 'datasourceTable', 1)" type="text"
+										placeholder="Data Source Name" style="width: 90%"
+										id="dsSearch"></td>
+									<td style="margin-top: 0"><select id="IdList"
+										style="width: 105%">
+											<option value="select">Name</option>
+
+									</select></td>
+								</tr>
+							</table>
+						</div>
+						<div id="dsTableContainer"></div>
+
+						<div id="paginationD"></div>
+
+					</div>
+					<!-- /widget-content for registered ds-->
+
+					<div class="widget-header">
+						<h5 style="margin-top: 3%; margin-left: 3%">
+							Registered Alerts<img src='imgs/add.jpg'
+								style="height: 18px; width: 16; padding-left: 3px; cursor: pointer"
+								id="imgaddAlert" alt="Add Alert" title="Add Alert">
+						</h5>
+					</div>
+					<!-- /widget-header -->
+
+					<div class="widget-content">
+						<div style="margin-top: -18px">
+							<table>
+								<tr>
+									<td><input name="filter"
+										onkeyup="filter(this, 'alertTable', 1)" type="text"
+										placeholder="Alert Name" style="width: 90%"
+										id="regAlertSearch"/>
+									</td>
+									<td style="margin-top: 0">
+										<select id="IdList" style="width: 105%">
+											<option value="select">Name</option>
+										</select>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div id="alertTableContainer" style="height: 375px"></div>
+						<div id="paginationA"></div>
+					</div>
+					<!-- /widget-content for registered queries-->
+
+
+
+					<div style="height: 448px;"></div>
+
+
+
+
+				</div>
+				<!-- /widget -->
+
+			</div>
+			<!-- /span5 -->
+
+
+			<div class="span9">
+
+				<div class="widget  widget-table action-table">
+
+					<div class="widget">
+
+						<div class="widget-header">
+							<h3 id="change">Create & Execute Query</h3>
+
+						</div>
+						<!-- /widget-header -->
+
+						<div class="widget-content">
+							<form id="allTabsForm">
+								<div id="tabs" style="margin-bottom: 2%">
+									<ul style="background: #aad2fa">
+
+										<li><a href="#tabs-1">Filter<img
+												src='imgs/filter.png' style="height: 32px; width: 32"></a></li>
+										<li><a href="#tabs-2">Group<img
+												src='imgs/grouping.png' style="height: 32px; width: 32"></a></li>
+										<li><a href="#tabs-3">Aggregation<img
+												src='imgs/aggregation.png' style="height: 32px; width: 32"></a></li>
+										<li><a href="#tabs-4">Spatial Pattern<img
+												src='imgs/spm.png' style="height: 32px; width: 32"></a></li>
+										<li><a href="#tabs-5">Temporal Pattern<img
+												src='imgs/timeline.png' style="height: 32px; width: 32"></a></li>
+										<li><a href="#tabs-6">Spatial Char<img
+												src='imgs/spchar.png' style="height: 32px; width: 32"></a></li>
+										<li><a href="#tabs-7">Temporal Char<img
+												src='imgs/tpchar.png' style="height: 32px; width: 32"></a></li>
+
+									</ul>
+
+									<div id="tabs-1"></div>
+
+									<div id="tabs-2"></div>
+
+									<div id="tabs-3"></div>
+
+									<div id="tabs-4"></div>
+
+									<div id="tabs-5"></div>
+
+									<div id="tabs-6"></div>
+
+									<div id="tabs-7"></div>
+
+								</div>
+								<div style="text-align: center; margin-bottom: 2%">
+									<input type="text" placeholder="Please enter the Query name"
+										id="QueryName1" value=""
+										style="float: left; margin-left: 10px;">
+									<!--<button id="exeQuery"  class="btn btn-small btn-inverse"  onclick="codeAddress()" >Save Query</button>-->
+
+									<a href="#testmodal" data-toggle="modal" type="button"
+										class="btn btn-small btn-inverse " style="width: 10%;">Save
+										Query</a>
+
+									<div class="modal fade" id="testmodal"
+										style="display: none; background-color: white;">
+										<div style="background-color: #AAD2FA; height: 10%">
+											<a class="close" data-dismiss="modal">&times;</a>
+											<h3>Final frame parameters</h3>
+										</div>
+										<div class="modal-body">
+											<table align="center">
+												<tr>
+													<td colspan="2" align="center">
+														<h3>
+															<img src='imgs/aggregation.png'
+																style="height: 32px; width: 32"> &nbsp;Final
+															Resolution
+														</h3>
+													</td>
+												</tr>
+												<tr>
+													<td><label><span style="color: red">* </span>Time
+															Window(in sec)</label></td>
+													<td><input type="text" name="dsTime" id="dsFTimeP"
+														style="margin-left: 5%" placeholder="300" /></td>
+												</tr>
+												<tr>
+													<td><label>Synchronize at nth Sec</label></td>
+													<td><input type="text" name="dsSync" id="dsFSyncP"
+															   style="margin-left: 5%" placeholder="60"/></td>
+												</tr>
+												<tr>
+													<td><label>Search time type</label></td>
+													<td>
+														<select id="dstimeTypeP" name="dstimeType"
+																style="margin-left: 5%">
+															<option value="0">Past</option>
+															<option value="1">Future</option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td><label>Spatial Wrapper</label></td>
+													<td>
+														<select id="dsSpatialWrapperP" name="dsSpatialWrapperP"
+																style="margin-left: 5%">
+															<option value="sum">Sum</option>
+															<option value="min">Min</option>
+															<option value="max">Max</option>
+															<option value="avg">Avg</option>
+															<option value="count">Count</option>
+															<option value="majority">Majority</option>
+															<option value="most_freq">Most Frequent</option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td><label><span style="color: red">* </span>Unit
+															of Latitude</label></td>
+													<td><input type="text" name="dsUnitLat"
+														id="dsFUnitLatP" style="margin-left: 5%" placeholder="2" /></td>
+												</tr>
+												<tr>
+													<td><label><span style="color: red">* </span>Unit
+															of Longitude</label></td>
+													<td><input type="text" name="dsUnitLong"
+														id="dsFUnitLongP" style="margin-left: 5%" placeholder="2" />
+													</td>
+												</tr>
+												<tr>
+													<td><label><span style="color: red">* </span>Southwest
+															of Latitude</label></td>
+													<td><input type="text" name="dsSouthLat"
+														id="dsFSouthLatP" style="margin-left: 5%" placeholder="24" />
+													</td>
+												</tr>
+												<tr>
+													<td><label><span style="color: red">* </span>Southwest
+															of Longitude</label></td>
+													<td><input type="text" name="dsSouthLong"
+														id="dsFSouthLongP" style="margin-left: 5%"
+														placeholder="-125" /></td>
+												</tr>
+												<tr>
+													<td><label><span style="color: red">* </span>Northeast
+															of Latitude</label></td>
+													<td><input type="text" name="dsNorthLat"
+														id="dsFNorthLatP" style="margin-left: 5%" placeholder="50" />
+													</td>
+												</tr>
+												<tr>
+													<td><label><span style="color: red">* </span>Northeast
+															of Longitude</label></td>
+													<td><input type="text" name="dsNorthLong"
+														id="dsFNorthLongP" style="margin-left: 5%"
+														placeholder="-66" /></td>
+												</tr>
+
+											</table>
+										</div>
+										<div class="modal-footer">
+											<a href="#" class="btn" data-dismiss="modal">Close</a> <a
+												id="exeQuery" class="btn btn-primary" data-dismiss="modal"
+												onclick="codeAddress()">Save Changes</a>
+											<!-- <input type="button"  class="btn btn-primary" id="exeQuery" onclick="codeAddress()">Save Changes</button>-->
+										</div>
+									</div>
+
+
+									<button type="reset" id="resetQueryValues"
+										class="btn btn-small btn-inverse">Reset Query</button>
+									<!--<input type="button" id="exeQuery"  class="btn btn-small btn-inverse" value="execute Query">-->
+								</div>
+
+							</form>
+						</div>
+						<!-- /widget-content -->
+
+
+
+
+					</div>
+					<!-- /widget -->
+
+				</div>
+				<!-- /widget -->
+
+			</div>
+			<!-- /widget outer -->
+
+			<div class="span9">
+				<div class="widget" id="customQuery" style="margin-bottom: 2%;">
+					<div class="widget-header">
+						<h3>Custom Query</h3>
+					</div>
+					<!-- /widget-header -->
+
+					<div class="widget-content">
+						<div class="stats" id="queryBuilder">
+							<form id="customQueryForm">
+								<div class="form-group" style="width: 10%;float: left;margin-right: 1%;"><br/>
+									<label for="customQueryDS">Select Ds:</label>
+									<select class="form-control" id="customQueryDS" onChange="getDsFields(this.value);"
+											style="width: 100%;">
+										<option>0</option>
+									</select>
+								</div>
+								<div class="form-group" style="width: 15%;float: left;margin-right: 1%;"><br/>
+									<label for="extractFields">Extract Fields:</label>
+									<select class="form-control" id="extractFields" multiple="multiple" style="width: 100%;">
+										<option>0</option>
+									</select>
+
+								</div>
+								<div class="form-group" style="width: 15%;float: left;margin-right: 1%;"><br/>
+									<label for="customQueryDsFields">Select Ds Fields:</label>
+									<select class="form-control" id="customQueryDsFields"
+											onchange="getFieldOperators(this.value);" style="width: 100%;">
+										<option>0</option>
+									</select>
+								</div>
+								<div class="form-group" style="width: 15%;float: left;margin-right: 1%;"><br/>
+									<label for="customQueryDsFieldOperators">Select Operator:</label>
+									<select class="form-control" id="customQueryDsFieldOperators" style="width: 100%;">
+										<option>0</option>
+										<option>1</option>
+									</select>
+								</div>
+								<div class="form-group" style="width: 30%;float: left;margin-right: 1%;"><br/>
+									<label for="queryParams">Enter Query Params:</label>
+									<input id="queryParams" type="text" style="width: 94%;"/>
+								</div>
+
+							</form>
+							<div class="form-group" style="width: 5%;float: left;margin-top: 3%;">
+								<button type="button" class="btn btn-small btn-inverse " onclick="setValues()">ADD</button>
+							</div>
+
+							<div class="form-group" style="width: 96%;float: left;">
+								<label for="finalQueryText">Final Query:</label>
+							<textarea id="finalQueryText" cols="116" rows="5" style="width: 100%;"></textarea>
+							</div>
+							<div class="form-group" style="width: 30%;float: left;margin-right: 1%;"><br/>
+								<label for="ruleName">Enter Rule Name:</label>
+								<input id="ruleName" type="text" style="width: 94%;"/>
+							</div>
+
+							<div class="form-group" style="width: 12%;float: right;margin-top: 5%;">
+								<button id="resetCustomQuery" type="button" class="btn btn-small btn-inverse " onclick="resetValues()">RESET</button>
+							</div>
+							<div class="form-group" style="width: 10%;float: right;margin-top: 5%;">
+								<button id="submitCustomQuery" type="button" class="btn btn-small btn-inverse " onclick="submitCustomQuery()">SUBMIT</button>
+							</div>
+						</div>
+						<!-- /stats -->
+					</div>
+
+
+					<!-- /widget-content -->
+				</div>
+
+			</div>
+
+			<div class="span9">
+				<div class="widget" id="accordion" style="margin-bottom: 2%;">
+					<div class="widget-header">
+						<h3>Query Graph</h3>
+					</div>
+					<!-- /widget-header -->
+
+					<div class="widget-content">
+						<div class="stats" id="flowGraph">
+							<!-- query graph will be coming here ! -->
+						</div>
+						<!-- /stats -->
+					</div>
+					<!-- /widget-content -->
+				</div>
+			</div>
+			<div class="span9">
+				<div class="widget" style="margin-bottom: 2%;">
+					<div class="widget-header">
+						<h3>Emage</h3>
+					</div>
+					<!-- /widget-header -->
+					<div class="widget-content" id="dsMapContainer"
+						style="width: 837px; height: 420px; clear: both;">
+						<!-- ds emage viz map will be coming here ! -->
+
+					</div>
+					<!-- /widget-content -->
+				</div>
+			</div>
+			<div class="span9" style="display: none">
+				<div class="widget">
+					<div class="widget  widget-table action-table">
+
+						<div class="widget">
+
+							<div class="widget-header" style="clear: both">
+								<h3 id="change">Map</h3>
+								<img id="imageStatus" title="Query Status" src="imgs/stop.png"
+									width="35px" height="35px"
+									style="bottom: 2px; float: right; position: absolute; right: 12px;">
+								<!-- <img id="imageStatus" src="imgs/stop.png"/>  -->
+								<!--	<select id = "chartList" style="height:70%;width:30%">
+					<option value = "select">Select Chart</option>
+					<option value = "bar">Bar Chart</option>
+					<option value = "line">Line Chart</option>
+					<option value = "pie">Pie Chart</option>
+					</select> -->
+							</div>
+							<!-- /widget-header -->
+
+							<div class="widget-content" style="clear: both">
+								<div id="mapstatus">&nbsp;&nbsp;&nbsp;Please run a query
+									to see it on the map.</div>
+								<div class="carousel slide" id="map-carousel">
+
+									<div class="carousel-inner" id="map-inner-block">
+
+										<!-- <div class="item active" id="uscon" style="width: 960px;clear:both;">
+						&nbsp;&nbsp;Please run a query to see it on the map.
+					</div> -->
+
+										<!-- place to add map -->
+									</div>
+									<a class="carousel-control left" href="#map-carousel"
+										data-slide="prev" style="display: none;">&lsaquo;</a> <a
+										class="carousel-control right" href="#map-carousel"
+										data-slide="next" style="display: none;">&rsaquo;</a>
+
+								</div>
+
+								<!-- <div id="uscon" style="width: 960px;clear:both;">
+						&nbsp;&nbsp;Please run a query to see it on the map.
+					</div>	 -->
+								<!-- div carousel -->
+
+								<!--  <div class="carousel slide" id="map-carousel">
+		
+					<div class="carousel-inner" id="map-inner-block">
+						<div class="item active" id="uscon" style="width: 960px;clear:both;">
+						&nbsp;&nbsp;Please run a query to see it on the map.
+					</div>
+					<div class="item" id="uscon" style="width: 960px;clear:both;">
+						&nbsp;&nbsp;Please run a query to see it on the map.
+					</div>
+				 place to add map				
+				</div> 
+				<a class="carousel-control left" href="#map-carousel" data-slide="prev">&lsaquo;</a>
+				<a class="carousel-control right" href="#map-carousel" data-slide="next">&rsaquo;</a>
+		
+				</div>  -->
+
+								<!-- carousel end -->
+							</div>
+							<!-- /widget-content -->
+
+
+
+
+						</div>
+						<!-- /widget -->
+
+					</div>
+					<!-- /widget -->
+
+				</div>
+				<!-- /widget outer -->
+
+
+
+
+			</div>
+			<!-- /row -->
+
+
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- divclosed -->
+
+</div>
+<!-- /main -->
+
+<div id="toPopup" class="popupr">
+
+	<div class="close"></div>
+	<span class="ecs_tooltip">Press Esc to close <span class="arrow"></span></span>
+	<div id="popup_content" style="height: 500px;overflow: auto;">
+		<!--your content start-->
+
+		<div id="DSTabs" style="margin-bottom: 2%">
+			<ul style="background: #aad2fa">
+				<li><a href="#dsConfig">Data Source Configuration<img
+						src='imgs/filter.png' style="height: 32px; width: 32"></a></li>
+				<li><a href="#initConfig">Initial Resolution<img
+						src='imgs/grouping.png' style="height: 32px; width: 32"></a></li>
+			</ul>
+			<form name="addDataSourceForm" id="addDataSourceForm"
+				enctype="multipart/form-data" action="#" method="POST">
+				<div id="dsConfig">
+					<div>
+						<table>
+							<tr>
+								<td><label><span style="color: red">* </span>Theme</label></td>
+								<td><input type="text" name="dsTheme" id="dsTheme"
+									style="margin-left: 5%" /></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Name</label></td>
+								<td><input type="text" name="dsName" id="dsName"
+									style="margin-left: 5%" /></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>URL/Path</label></td>
+								<td><input type="text" name="dsPath" id="dsPath"
+									style="margin-left: 5%" /></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Data Syntax</label></td>
+								<td><textarea name="dsSyntax" id="dsSyntax" cols="15" rows="1"
+											  style="margin-left: 5%"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td><label>Data Format</label></td>
+								<td><select id="dsDataFormat" name="dsDataFormat"
+									style="margin-left: 5%"
+									onchange="getDataFormatInfo(this.value)">
+										<option value="select" selected>Selected</option>
+										<option value="stream">Data Stream</option>
+										<option value="rest">Rest Endpoint</option>
+									<option value="file">File</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td colspan="2"><input type="hidden" name="dataSourceId"
+									id="dataSourceId" value="0"> <input type="hidden"
+									name="wrapperId" id="wrapperId" value="">
+									<div id="dataFormatData">
+										<div id="stream" style="display: none;">
+											<table>
+												<tr>
+													<td colspan="2"><strong>Bag of Words </strong></td>
+												</tr>
+												<tr>
+													<td><label>Supported</label></td>
+													<td><select style="margin-left: 5%" name="dfSupport"
+														id="dfSupport">
+															<option value="Twitter">Twitter</option>
+															<option value="Flickr">Flickr</option>
+															<option value="Simulator">Simulator</option>
+													</select></td>
+												</tr>
+												<tr>
+													<td colspan="2"><textarea name="dfTextArea"
+															id="dfTextArea" cols="15" rows="5"
+															style="margin-left: 5%"></textarea></td>
+												</tr>
+											</table>
+										</div>
+
+
+										<div id="visual" style="display: none;">
+											<table>
+												<tr>
+													<td colspan=2><strong>Visual Upload
+															Parameters</strong></td>
+												</tr>
+												<tr>
+													<td><label>Translataion Matrix Path</label></td>
+													<td>
+														<div id="viewTMPData"></div>
+														<div id="addTMPData">
+															<input type="file" name="dfTransPath" id="dfTransPath">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td colspan="2"><div id="tmpData"
+															style="display: none;"></div></td>
+												</tr>
+												<tr>
+													<td><label>Color Matrix Path</label></td>
+													<td>
+														<div id="viewCMPData" style="display: none;">
+															<input type="button" name="viewCMP" id="viewCMP"
+																value="View">
+														</div>
+														<div id="addCMPData">
+															<input type="file" name="dfColorPath" id="dfColorPath"
+																style="margin-left: 5%">
+														</div>
+													</td>
+												</tr>
+												<div id="cmpData"></div>
+												<tr>
+													<td><label>Mask Path</label></td>
+													<td>
+														<div id="viewMPData" style="display: none;">
+															<input type="button" name="viewMP" id="viewMP"
+																value="View">
+														</div>
+														<div id="addMPData">
+															<input type="file" name="dfMaskPath" id="dfMaskPath"
+																style="margin-left: 5%">
+														</div>
+													</td>
+												</tr>
+												<div id="mpData"></div>
+												<tr>
+													<td><label>Ignore Colors after</label></td>
+													<td><input type="text" name="dfIgnoreColor"
+														id="dfIgnoreColor" style="margin-left: 5%"></td>
+												</tr>
+											</table>
+										</div>
+
+										<div id="file" style="display: none;">
+											<table>
+												<tr>
+													<td colspan="2"><strong>Type of Dataformat </strong></td>
+												</tr>
+												<tr>
+													<td colspan="2"><select id="Data_format_type"
+																			onchange="ViewDataFormatInfo(this.value)">
+														<option value="csvArray">CSVArray</option>
+														<option value="csvField">CSVField</option>
+														<option value="xml">XML</option>
+														<option value="json">JSON</option>
+														<option value="visual">visual</option>
+
+													</select><br /> <!--  <label ><span style="color:red">* </span>CSV URL/Path</label> -->
+														<!--  <input type="text" name="CSV URL"  style="margin-left:1%" id="CSV_URL"> -->
+														<textarea name="key-value_pair" id="key-value_pair"
+																  placeholder="Enter key-value pair" cols="300" rows="5">{"datasource_type":"point", "spatial_wrapper":"sum", "lat_index" :0, "lon_index":1, "val_index":2}
+							  </textarea> <!--<input type="file" name="dfCsvFile" id="dfCsvFile" style="margin-left:5%"></div>-->
+													</td>
+												</tr>
+											</table>
+										</div>
+
+
+										<div id="rest" style="display: none;">
+											<table>
+												<tr>
+													<td colspan="2"><strong>Type of response Dataformat </strong></td>
+												</tr>
+												<tr>
+													<td colspan="2"><select id="rest_data_format_type"
+																			onchange="ViewDataFormatInfo(this.value)">
+														<option value="csvArray">CSVArray</option>
+														<option value="csvField">CSVField</option>
+														<option value="xml">XML</option>
+														<option value="json">JSON</option>
+														<option value="visual">visual</option>
+
+													</select><br /> <!--  <label ><span style="color:red">* </span>CSV URL/Path</label> -->
+														<!--  <input type="text" name="CSV URL"  style="margin-left:1%" id="CSV_URL"> -->
+														<textarea name="key-value_pair" id="rest_key-value_pair"
+																  placeholder="Enter key-value pair" cols="300" rows="5">{"datasource_type":"point", "spatial_wrapper":"sum", "lat_index" :0, "lon_index":1, "val_index":2}
+							  </textarea> <!--<input type="file" name="dfCsvFile" id="dfCsvFile" style="margin-left:5%"></div>-->
+													</td>
+												</tr>
+											</table>
+										</div>
+
+									</div></td>
+							</tr>
+
+						</table>
+					</div>
+				</div>
+			</form>
+
+			<div id="initConfig">
+				<div>
+					<table>
+						<tr>
+							<td><label><span style="color: red">* </span>Time
+									Window(in sec)</label></td>
+							<td><input type="text" name="dsTime" id="dsTime"
+								style="margin-left: 5%" placeholder="300" /></td>
+						</tr>
+						<tr>
+							<td><label>Synchronize at nth Sec</label></td>
+							<td><input type="text" name="dsSync" id="dsSync"
+									   style="margin-left: 5%" placeholder="60"/></td>
+						</tr>
+						<tr>
+							<td><label>Search time type</label></td>
+							<td>
+								<select id="dstimeType" name="dstimeType"
+										style="margin-left: 5%">
+									<option value="0">Past</option>
+									<option value="1">Future</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Unit of
+									Latitude</label></td>
+							<td><input type="text" name="dsUnitLat" id="dsUnitLat"
+								style="margin-left: 5%" placeholder="2" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Unit of
+									Longitude</label></td>
+							<td><input type="text" name="dsUnitLong" id="dsUnitLong"
+								style="margin-left: 5%" placeholder="2" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Southwest
+									of Latitude</label></td>
+							<td><input type="text" name="dsSouthLat" id="dsSouthLat"
+								style="margin-left: 5%" placeholder="24" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Southwest
+									of Longitude</label></td>
+							<td><input type="text" name="dsSouthLong" id="dsSouthLong"
+								style="margin-left: 5%" placeholder="-125" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Northeast
+									of Latitude</label></td>
+							<td><input type="text" name="dsNorthLat" id="dsNorthLat"
+								style="margin-left: 5%" placeholder="50" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Northeast
+									of Longitude</label></td>
+							<td><input type="text" name="dsNorthLong" id="dsNorthLong"
+								style="margin-left: 5%" placeholder="-66" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<input id="genEmage" type="checkbox" name="genEmage" value="genEmage" checked>&nbsp; Generate Emage <br /><br/>
+							</td>
+						</tr>
+						<!--	<tr>
+                                <td colspan="2">
+                                    Mongo Query:<textarea name="dsQuery" id="dsQuery" cols="15" rows="1" style="margin-left: 5%"></textarea>
+                                </td>
+                            </tr>-->
+					</table>
+				</div>
+				<div>
+					<input type="button" value="Add"
+						style="margin-top: 5%; margin-left: 0%; float: left; position: relative"
+						id="addDataSourceBtn" /> <input type="button" value="Cancel"
+						style="margin-top: 5%; margin-left: 2%;" id="addDataSourceCancel" />
+					<!--<button style="margin-top:5%; margin-left:5%;float:left;position:relative"  class="closer">Cancel</button>-->
+
+					<!-- <script>
+			  function closepopup()
+			   {
+			      if(false == my_window.closed)
+			      {
+			         my_window.close ();
+			      }
+			      else
+			      {
+			         alert('Window already closed!');
+			      }
+			   }
+			  </script>---->
+
+				</div>
+			</div>
+
+
+		</div>
+
+
+	</div>
+	<!--your content end-->
+
+</div>
+<!--toPopup end-->
+
+<!--<div class="loader"></div>-->
+<!--<div id="backgroundPopup"></div>-->
+
+
+
+
+
+<div id="toPopup3" class="popupr">
+
+	<div class="close"></div>
+	<span class="ecs_tooltip">Press Esc to close <span class="arrow"></span></span>
+	<div id="popup_alert_content" style="height: 500px;overflow: auto;">
+		<!-- My Alert content starts here -->
+
+
+		<div id="AlertTabs" style="margin-bottom: 2%">
+			<ul style="background: #aad2fa">
+				<li><a href="#alertConfig">Alert Configuration<img
+						src='imgs/filter.png' style="height: 32px; width: 32"></a></li>
+			</ul>
+			<form name="addAlertForm" id="addAlertForm"
+				enctype="multipart/form-data" action="#" method="POST">
+				<div id="alertConfig">
+					<div>
+						<table>
+							<tr>
+								<td colspan="2">
+									<input type="hidden" name="alertId" id="alertId" value="0" />
+								</td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Alert
+										Name</label></td>
+								<td><input type="text" name="alertName" id="alertName"
+									style="margin-left: 5%" /></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Alert Type</label></td>
+								<td><select id="alertType" name="alertType"
+									style="margin-left: 5%" onchange="getAlertTypeInfo(this.value)">
+										<option value="select">Select</option>
+										<option value="NoSoln">Only Alerts without Solution</option>
+										<option value="WithSoln">Alerts with Solution</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Alert
+										Theme</label></td>
+								<td><input type="text" name="alertTheme" id="alertTheme"
+									style="margin-left: 5%" /></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Alert
+										Source</label></td>
+								<td><input type="text" name="alertSrc" id="alertSrc"
+									style="margin-left: 5%" /></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Alert
+										Source Min</label></td>
+								<td><input type="number" name="alertSrcMin"
+									id="alertSrcMin" style="margin-left: 5%" /></td>
+							</tr>
+							<tr>
+								<td><label><span style="color: red">* </span>Alert
+										Source Max</label></td>
+								<td><input type="number" name="alertSrcMax"
+									id="alertSrcMax" style="margin-left: 5%" /></td>
+							</tr>
+
+							<tr>
+								<td colspan="2">
+								<!-- <input type="hidden" name="alertTypeBasedId" id="alertTypeBasedId" value="0">
+								<input type="text" name="alerttId" id="alerttId" value="0"> -->
+								<div id="alertFormatData">
+									<div id="solnData" style="display: none;">
+									<table>
+										<tr>
+											<td><label><span style="color: red">* </span>Safe
+													Source</label></td>
+											<td><input type="text" name="safeSrc" id="safeSrc"
+												style="margin-left: 5%" /></td>
+										</tr>
+										<tr>
+											<td><label><span style="color: red">* </span>Safe
+													Source Min</label></td>
+											<td><input type="number" name="safeSrcMin"
+												id="safeSrcMin" style="margin-left: 5%" /></td>
+										</tr>
+										<tr>
+											<td><label><span style="color: red">* </span>Safe
+													Source Max</label></td>
+											<td><input type="number" name="safeSrcMax"
+												id="safeSrcMax" style="margin-left: 5%" /></td>
+										</tr>
+
+									</table>
+									</div>
+								</div>
+								</td>
+							</tr>
+							<tr id="testEndpoint" >
+								<td><label>Result Endpoint</label></td>
+								<td><input type="text" name="endpoint" placeholder="Endpoint to send the result"
+										   id="endpoint" style="margin-left: 5%" /></td>
+							</tr>
+							<tr id="aMessage" >
+								<td><label>Alert Message</label></td>
+								<td><input type="text" name="message" placeholder="Desired Alert Message"
+										   id="message" style="margin-left: 5%" /></td>
+							</tr>
+							<tr id="aLat" >
+								<td><label>Latitude</label></td>
+								<td><input type="number" name="lat" placeholder="Latitude of desired region"
+										   id="lat" style="margin-left: 5%" /></td>
+							</tr>
+							<tr id="aLng" >
+								<td><label>Longitude</label></td>
+								<td><input type="number" name="lng" placeholder="Longitude of desired region"
+										   id="lng" style="margin-left: 5%" /></td>
+							</tr>
+							<tr id="aRadius" >
+								<td><label>Radius</label></td>
+								<td><input type="number" name="radius" placeholder="Radius for desired region"
+										   id="radius" style="margin-left: 5%" /></td>
+							</tr>
+
+
+						</table>
+					</div>
+				</div>
+				<input type="button" value="Add" style="margin-top: 5%;" id="addAlertBtn" /> 
+				<input type="button" value="Cancel" style="margin-top: 5%;" id="addAlertCancel" />
+				<!--<script>-->
+					<!--$('#addAlertCancel').click(function() {-->
+						<!--disablePopup(); // function close pop up-->
+					<!--});-->
+				<!--</script>-->
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="extra">
+
+	<div class="container">
+
+		<div class="row">
+
+			<div class="span3">
+
+
+				<ul>
+					<li><a href="javascript:;">About Us</a></li>
+
+				</ul>
+
+			</div>
+			<!-- /span3 -->
+
+			<div class="span3">
+
+
+				<ul>
+					<li><a href="javascript:;">Frequently Asked Questions</a></li>
+
+				</ul>
+
+			</div>
+			<!-- /span3 -->
+
+			<div class="span3">
+
+
+				<ul>
+					<li><a href="javascript:;">License</a></li>
+				</ul>
+
+			</div>
+			<!-- /span3 -->
+
+			<div class="span3">
+
+
+				<ul>
+					<li><a href="javascript:;">Consectetur adipisicing</a></li>
+
+				</ul>
+
+			</div>
+			<!-- /span3 -->
+
+		</div>
+		<!-- /row -->
+
+	</div>
+	<!-- /container -->
+
+</div>
+<!-- /extra -->
+
+
+<script>
+	var topo, projection, path, svg, g, myDiv, myMapData;
+	function mapDataLoader2(mapData, divName) {
+
+		d3.select(window).on("resize", throttle);
+		var zoom = d3.behavior.zoom().scaleExtent([ 1, 8 ]).on("zoom", move);
+
+		var width = 960, height = 488;
+
+		//var topo,projection,path,svg,g,myDiv,myMapData;
+		//console.log("we have to call you right "+divName);
+		//var offsetWidth = 120;
+		var width = 960; //document.getElementById(divName).offsetWidth-60;
+		var height = 488;//width / 2;
+
+		var tooltip = d3.select(divName).append("div").attr("class",
+				"tooltip hidden");
+
+		if (divName === undefined) {
+			console.log("divname undefined so going back");
+			divName = "";
+			return false;
+		}
+
+		myDiv = divName;
+		myMapData = mapData;
+		// console.log(" we are calling mapData with divName "+divName);
+		// console.log(" we are calling mapData with data "+mapData);
+		projection = d3.geo.mercator().translate([ 0, 0 ]).scale(
+				width / 2 / Math.PI);
+
+		path = d3.geo.path().projection(projection);
+
+		svg = d3.select(divName).append("svg").attr("width", width).attr(
+				"height", height).append("g").attr("transform",
+				"translate(" + width / 2 + "," + height / 2 + ")").call(zoom);
+
+		g = svg.append("g");
+
+		d3.json("resource/world-topo.json",
+				function(error, world) {
+
+					var countries = topojson.feature(world,
+							world.objects.countries).features;
+					topo = countries
+					var country = g.selectAll(".country").data(topo);
+					country.enter().insert("path").attr("class", "country")
+							.attr("d", path).attr("id", function(d, i) {
+								return d.id;
+							}).attr("title", function(d, i) {
+								return d.properties.name;
+							})
+							//.style("fill","#ffffb7");
+							.style("fill", function(d, i) {
+								return d.properties.color;
+							});
+
+					//ofsets plus width/height of transform, plsu 20 px of padding, plus 20 extra for tooltip offset off mouse			
+					var offsetL = document.getElementById("change").offsetLeft
+							+ (width / 2) + 40;
+
+					var offsetT = document.getElementById("change").offsetTop
+							+ (height / 2) + 20;
+
+					//tooltips
+					country.on(
+							"mousemove",
+							function(d, i) {
+								var mouse = d3.mouse(svg.node()).map(
+										function(d) {
+											return parseInt(d);
+										});
+								tooltip.classed("hidden", false).attr(
+										"style",
+										"left:" + (mouse[0] + offsetL)
+												+ "px;top:"
+												+ (mouse[1] + offsetT) + "px")
+										.html(d.properties.name)
+							}).on("mouseout", function(d, i) {
+						tooltip.classed("hidden", true)
+					});
+
+					mapData = JSON.parse(mapData); // since we are getting a string --sanjukta
+
+					var featureArr = [];
+					var feature;
+					console.log("");
+
+					//triangles on the spot
+					g.selectAll("polygon")
+					//.data(topojson.feature(mapData,mapData.sttBoxGeoJson.features))
+					.data(mapData.sttBoxGeoJson.features).enter()
+							.append("path").attr("class", "feature").attr("d",
+									path).attr("fill", "red").attr("stroke",
+									"red").attr("stroke-width", 1);
+
+					/*
+					$.each(mapData.sttBoxGeoJson.features[0].geometry, function(x, box){
+					  feature = {
+					    "geometry":{"type":"Polygon", "coordinates": box.coordinates}, 
+					    "properties": {"theme": value.theme, "value": sttPoint[x].result}, 
+					    "type":"Feature"
+					  };
+					  featureArr.push(feature);
+					}
+					console.log(featureArr);
+					g.selectAll("polygon") 
+					  //.data(topojson.feature(mapData,mapData.sttBoxGeoJson.features))
+					  .data(featureArr)
+					  .enter()
+					  .append("polygon")  
+					  .attr("class", "feature")
+					   	.attr("fill","red")
+						.attr("stroke","red")
+						.attr("stroke-width",1) ;
+					 */
+
+					/*
+					
+					//triangles on the spot
+					g.selectAll("polygon") 
+					//.data(topojson.feature(mapData,mapData.sttBoxGeoJson.features))
+					.data(mapData.sttBoxGeoJson.features)
+					.enter()
+					.append("path")  
+					.attr("class", "feature")
+					.attr("d",path)
+					.attr("fill","white")
+						.attr("stroke","red")
+						.attr("stroke-width",1) ;
+
+					//rectangles not positioned right
+					
+					g.selectAll("polygon") 
+					.data(mapData.sttBoxGeoJson.features)
+					.enter().append("polygon")
+					.attr("points",function(d) { 
+					    return d.geometry.coordinates.map(function(e) {		      	
+					    	return [e[0],e[1]].join(",");
+					    }).join(" ");
+					    	//return d.values.map(function(e) { return e[0] + "," + e[1]; }).join(" ");
+					  })
+					  .attr("stroke","red")
+					  .attr("stroke-width",2)
+					.style("fill", "red");
+					
+
+									
+								 
+							
+						var text = svg.append("g")
+						.attr("class", "labels")
+						.selectAll("text")
+						.data(mapData.sttBoxGeoJson.features)
+						.enter().append("text")
+						.attr("dx", function(d) { return d.geometry.coordinates[0][0];})
+						.attr("dy", function(d) { return d.geometry.coordinates[0][1];})
+						.attr("font-family", "sans-serif")
+						.attr("font-size", "10px")
+						.attr("fill","black")
+						.text(function(d) {return d.properties.value;});
+					 */
+
+				});
+
+		function redraw() {
+
+			width = $(myDiv).offsetWidth - 60;
+			height = width / 2;
+			d3.select('svg').remove();
+			//setup(width,height);			 
+			mapDataLoader(myMapData, myDiv);
+			//draw(topo);			 
+		}
+
+		function move() {
+
+			var t = d3.event.translate;
+			var s = d3.event.scale;
+			var h = height / 3;
+
+			t[0] = Math.min(width / 2 * (s - 1), Math.max(width / 2 * (1 - s),
+					t[0]));
+			t[1] = Math.min(height / 2 * (s - 1) + h * s, Math.max(height / 2
+					* (1 - s) - h * s, t[1]));
+
+			zoom.translate(t);
+			g.style("stroke-width", 1 / s).attr("transform",
+					"translate(" + t + ")scale(" + s + ")");
+
+		}
+
+		var throttleTimer;
+		function throttle() {
+
+			window.clearTimeout(throttleTimer);
+			throttleTimer = window.setTimeout(function() {
+				redraw();
+			}, 200);
+		}
+		//console.log("we are done with maploader");
+
+		//return move();
+	}
+
+	function zoomOut() {
+		var t = [ 0, 0 ];
+		//t[0] = Math.min(width / 2 * (s - 1), Math.max(width / 2 * (1 - s), t[0]));
+		//t[1] = Math.min(height / 2 * (s - 1) + h * s, Math.max(height / 2 * (1 - s) - h * s, t[1]));
+		//console.log(mapDataLoader.move);
+		//var zoom = d3.behavior.zoom()
+		//.scaleExtent([1, 8])
+		//.on("zoom", mapDataLoader.move);
+		//zoom.translate(t);
+		//g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
+		g.transition().duration(750).attr("transform", "");
+	}
+
+	var myDivs1 = new Array(1, 2);
+
+	function showSelectedval(addup1) {
+		var t1 = 'showdiv' + addup1, r1, dv1;
+		for (var i = 0; i < myDivs1.length; i++) {
+			r1 = 'showdiv' + myDivs1[i];
+			dv1 = document.getElementById(r1);
+			if (dv1) {
+				if (t1 === r1) {
+					dv1.style.display = 'block';
+				} else {
+					dv1.style.display = 'none';
+				}
+			}
+		}
+		return false;
+	}
+
+	var myDivs = new Array(3, 4, 5, 6, 7, 8, 9, 12, 13);
+
+	function showSelected(addup) {
+		var t = 'showdivision' + addup, r, dv;
+
+		for (var i = 0; i < myDivs.length; i++) {
+			r = 'showdivision' + myDivs[i];
+			dv = document.getElementById(r);
+			if (dv) {
+				if (t === r) {
+					dv.style.display = 'block';
+				} else {
+					dv.style.display = 'none';
+				}
+			}
+		}
+		return false;
+	}
+	var myDivsInside = new Array(10, 11, 14, 15, 16);
+	function showSelectedInsideDivs(addup) {
+		var t = 'showdivision' + addup, r, dv;
+
+		for (var i = 0; i < myDivs.length; i++) {
+			r = 'showdivision' + myDivsInside[i];
+			dv = document.getElementById(r);
+			if (dv) {
+				if (t === r) {
+					dv.style.display = 'block';
+				} else {
+					dv.style.display = 'none';
+				}
+			}
+		}
+		return false;
+	}
+</script>
+<script src="js/libs/multiselect/jquery.multi-select.js"></script>
+<script type="text/javascript">
+	//console.log("we are startog");
+	$(function() {
+		$("#tabs").tabs();
+	});
+
+	$(function() {
+
+		$("#DSTabs").tabs();
+
+		/* event for close the popup */
+		$("div.close").hover(function() {
+			$('span.ecs_tooltip').show();
+		}, function() {
+			$('span.ecs_tooltip').hide();
+		});
+
+		$("div.close").click(function() {
+			disablePopup(); // function close pop up
+		});
+
+		$('#addDataSourceCancel').click(function() {
+			disablePopup(); // function close pop up
+		});
+
+		$(this).keyup(function(event) {
+			if (event.which == 27) { // 27 is 'Ecs' in the keyboard
+				disablePopup(); // function close pop up
+			}
+		});
+
+		$("div#backgroundPopup").click(function() {
+			disablePopup(); // function close pop up
+		});
+
+		$('a.livebox').click(function() {
+			//alert('Hello World!');
+			return false;
+		});
+
+		/************** start: functions. **************/
+		function loading() {
+			$("div.loader").show();
+		}
+		function closeloading() {
+			$("div.loader").fadeOut('normal');
+		}
+
+		var popupStatus = 0; // set value
+
+		function loadPopup() {
+			//alert("how is popup called");
+			//if(popupStatus == 0) { // if value is 0, show popup
+			closeloading(); // fadeout loading
+			$("#toPopup").fadeIn(0500); // fadein popup div
+			$("#backgroundPopup").css("opacity", "0.7"); // css opacity, supports IE7, IE8
+			$("#backgroundPopup").fadeIn(0001);
+			//popupStatus = 1; // and set value to 1
+			//}	
+		}
+
+		function disablePopup() {
+			$("#toPopup").fadeOut("normal");
+			$("#backgroundPopup").fadeOut("normal");
+			$("#backgroundPopup").fadeOut("normal");
+			//popupStatus = 0;  // and set value to 0
+			//}
+		}
+	});
+	/************** end: functions. **************/
+</script>
+<script type="text/javascript">
+	
+	$(function() {
+
+		$("#AlertTabs").tabs();
+
+		//event for close the popup
+		$("div.close").hover(function() {
+			$('span.ecs_tooltip').show();
+		}, function() {
+			$('span.ecs_tooltip').hide();
+		});
+
+		$("div.close").click(function() {
+			disableAlertPopup(); // function close pop up
+		});
+
+		$('#addAlertCancel').click(function() {
+			disableAlertPopup(); // function close pop up
+		});
+
+		$(this).keyup(function(event) {
+			if (event.which == 27) { // 27 is 'Ecs' in the keyboard
+				disableAlertPopup(); // function close pop up
+			}
+		});
+
+		$("div#backgroundPopup3").click(function() {
+			disableAlertPopup(); // function close pop up
+		});
+
+		$('a.livebox').click(function() {
+			//alert('Hello World!');
+			return false;
+		});
+
+		//************** start: functions. **************
+		function loading() {
+			$("div.loader").show();
+		}
+		function closeloading() {
+			$("div.loader").fadeOut('normal');
+		}
+
+		var popupStatus = 0; // set value
+
+		function loadPopup() {
+			alert("how is popup called");
+			//if(popupStatus == 0) { // if value is 0, show popup
+			closeloading(); // fadeout loading
+			$("#toPopup3").fadeIn(0500); // fadein popup div
+			$("#backgroundPopup3").css("opacity", "0.7"); // css opacity, supports IE7, IE8
+			$("#backgroundPopup3").fadeIn(0001);
+			//popupStatus = 1; // and set value to 1
+			//}	
+		}
+
+		function disableAlertPopup() {
+			//if(popupStatus == 1) { // if value is 1, close popup
+			$("#toPopup3").fadeOut("normal");  
+            $("#backgroundPopup3").fadeOut("normal");
+			//$("#backgroundPopup").fadeOut("normal");
+			//popupStatus = 0;  // and set value to 0
+			//}
+		}
+		/************** end: functions. **************/
+
+		$(function() {
+			$('.multi').multiSelect({
+			//selectableHeader: "<div class='custom-header'>All DS</div>",
+			//$('.custom-header').multiSelect('refresh');
+			//selectionHeader: "<div class='custom-header'>Selected DS</div>"
+			});
+		});
+
+	});
+
+	$(function() {
+		$('#vdfTransPath').on('change', function() {
+			var filePath = $(this).val();
+			console.log(filePath + "file path");
+		});
+	});
+</script>
+<div id="hidden_id_trans" style="display: none"></div>
+<div id="hidden_id_color" style="display: none"></div>
+<div id="hidden_id_mask" style="display: none"></div>
+<!--<div id="hidden_id_File" style="display:none" > </div>-->
+
+
+
+
+<script>
+	// Check for the various File API support.
+	if (window.File && window.FileReader && window.FileList && window.Blob) {
+
+	} else {
+		alert('The File APIs are not fully supported by your browser.');
+	}
+
+	function readSingleFile(evt, id) {
+		//Retrieve the first (and only!) File from the FileList object
+
+		var f = evt.files[0];
+
+		if (f) {
+
+			var r = new FileReader();
+			r.onload = function(e) {
+				var contents = e.target.result;
+
+				$("#hidden_id_" + id).html(contents);
+				//alert( "Got the file"
+				//+"name: " + f.name + "n"
+				//+"type: " + f.type + "n"
+				//+"size: " + f.size + " bytesn"
+				// + "starts with: " + contents.substr(1, contents.indexOf("n"))
+				// );
+			}
+			//alert(r.result);
+			r.readAsBinaryString(f); //readAsBinaryString(file)
+		} else {
+			alert("Failed to load file");
+		}
+		//alert(contents);             // getcontent(f);
+	}
+	function getcontent(e) { //alert(e);
+		file = fopen(e);
+		file_length = flength(file);
+		content = fread(file, file_length);
+		//document.getElementById("myDiv").innerText = content;
+	}
+
+</script>
+<!--var rr = document.getElementById('dfTransPath').addEventListener('change',
+			function() {
+				readSingleFile(this, 'trans')
+			}, false);
+	var r1 = $('#hidden_id_trans').html();
+	var rr = document.getElementById('dfColorPath').addEventListener('change',
+			function() {
+				readSingleFile(this, 'color')
+			}, false);
+	var r2 = $('#hidden_id_color').html();
+	var rr = document.getElementById('dfMaskPath').addEventListener('change',
+			function() {
+				readSingleFile(this, 'mask')
+			}, false);
+	var r3 = $('#hidden_id_mask').html();-->

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This web.xml file is not required when using Servlet 3.0 container, 
+     see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <servlet>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>com.eventshop.eventshoplinux</param-value>
+        </init-param>
+         <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>REST Web Service</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>com.eventshop.eventshoplinux.webservice</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <url-pattern>/webresources/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>REST Web Service</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+    <servlet-name>register</servlet-name>
+    <servlet-class>com.eventshop.eventshoplinux.servlets.RegisterServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>register</servlet-name>
+    <url-pattern>/register</url-pattern>
+  </servlet-mapping>
+
+    <listener>
+        <listener-class>
+            com.eventshop.eventshoplinux.lifecycle.EventshopServletListener
+        </listener-class>
+    </listener>
+
+
+    <!-- <context-param>
+         <param-name>routeBuilder-MyRoute</param-name>
+         <param-value>packagescan:com.eventshop.eventshoplinux.camel</param-value>
+     </context-param>-->
+
+    <context-param>
+        <!-- define a lifecycle which could help user to setup the registry which could be use as a reference in camel route -->
+        <!-- If you use org.apache.camel.component.servletlistener.JndiCamelServletContextListener then the CamelContextLifecycle
+         must use the JndiRegistry as well. And likewise if the servlet is org.apache.camel.component.servletlistener.SimpleCamelServletContextListener
+         then the CamelContextLifecycle must use the SimpleRegistry -->
+        <param-name>CamelContextLifecycle</param-name>
+        <param-value>com.eventshop.eventshoplinux.lifecycle.CamelContextLifeCycle</param-value>
+    </context-param>
+
+    <!-- the listener that kick-starts Camel -->
+    <listener>
+        <listener-class>org.apache.camel.component.servletlistener.JndiCamelServletContextListener</listener-class>
+    </listener>
+
+    <!-- Camel servlet used in the Camel application -->
+    <servlet>
+        <servlet-name>CamelServlet</servlet-name>
+        <servlet-class>org.apache.camel.component.servlet.CamelHttpTransportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- Camel servlet mapping -->
+    <servlet-mapping>
+        <servlet-name>CamelServlet</servlet-name>
+        <url-pattern>/camel/*</url-pattern>
+    </servlet-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Permitted Actions</web-resource-name>
+            <url-pattern>/rest/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>PUT</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+    </security-constraint>
+</web-app>

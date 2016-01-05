@@ -1,0 +1,70 @@
+[
+  {
+    "id": 495260,
+    "name": "Shcherbinka",
+    "coord": {
+      "lon": 37.559719,
+      "lat": 55.499722
+    },
+    "main": {
+      "temp": 294.23,
+      "pressure": 1015,
+      "humidity": 56,
+      "temp_min": 293.15,
+      "temp_max": 295.15
+    },
+    "dt": 1435731186,
+    "wind": {
+      "speed": 2,
+      "deg": 360,
+      "var_beg": 290,
+      "var_end": 90
+    },
+    "sys": {"country": ""},
+    "clouds": {"all": 0},
+    "weather": [
+      {
+        "id": 800,
+        "main": "Clear",
+        "description": "Sky is Clear",
+        "icon": "01d"
+      }
+    ]
+  },
+  {
+    "id": 564517,
+    "name": "Dubrovitsy",
+    "coord": {
+      "lon": 37.486698,
+      "lat": 55.43969
+    },
+    "main": {
+      "temp": 294.35,
+      "pressure": 1015,
+      "humidity": 56,
+      "temp_min": 293.15,
+      "temp_max": 295.37
+    },
+    "dt": 1435731486,
+    "wind": {
+      "speed": 2,
+      "deg": 360,
+      "var_beg": 290,
+      "var_end": 90
+    },
+    "sys": {
+      "country": ""
+    },
+    "clouds": {
+      "all": 0
+    },
+    "weather": [
+      {
+        "id": 800,
+        "main": "Clear",
+        "description": "Sky is Clear",
+        "icon": "01d"
+      }
+    ]
+  }
+  ]

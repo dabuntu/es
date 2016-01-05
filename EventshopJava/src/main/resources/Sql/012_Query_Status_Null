@@ -1,0 +1,1 @@
+ALTER TABLE  `Query_Master` CHANGE  `query_status`  `query_status` CHAR( 1 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL ;

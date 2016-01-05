@@ -1,0 +1,1 @@
+ALTER TABLE  `Query_Master` ADD  `linked_ds` VARCHAR( 50 ) NOT NULL ;

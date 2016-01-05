@@ -1,0 +1,106 @@
+<table class="table table-bordered sortable" id="alertTable">
+	<thead>
+		<tr>
+			<th>AID</th>
+			<th>Alert Name</th>
+			<th>Status</th>
+			<th><input type="checkbox" onClick="toggle1(this)" /><br /></th>
+
+		</tr>
+	</thead>
+	<tbody>
+		
+		<% for (var i = 0; i < Data.length; i++) { %>
+
+		<tr>
+			<td><%=Data[i].aID%></td>
+
+			<td><div style="width: 55px; word-wrap: break-word;">
+			<span id="<%=Data[i].aID%>" style="text-decoration: under-line; color: blue; cursor: pointer;"><%=Data[i].alertName%></span>
+				</div></td>
+			<td><% if(Data[i].alertStatus == 0) {%> Stopped <% }else{ %>
+				Running <% } %></td>
+
+			<td><% if(Data[i].alertStatus == 0) {%>
+				<button class="start_a btn btn-primary btn-small"
+					id="<%=Data[i].aID%>">R</button>
+				<% }else{ %>
+				<button class="stop_a btn btn-success btn-small"
+					id="<%=Data[i].aID%>">P</button><% } %>
+
+			</td>
+
+		</tr>
+
+
+
+		<% } %>
+		<div class="Alertstopplay" style="margin: 15px 0px 10px 0px;">
+			<a class="btn btn-small btn-inverse h16" href="#"><img
+				id="a_play" name="" class="img_class" src="imgs/play_32.png"></a>
+
+			<a class="btn btn-small btn-inverse h16" href="#"><img
+				id="a_stop" name="" class="img_class_stop" src="imgs/stop_32.png"></a></span>
+		</div>
+
+
+
+	</tbody>
+
+
+</table>
+<script type="text/javascript">
+		
+      //Pagination for Alert
+        var pagerA = new Pager('alertTable', 5); 
+        pagerA.init(); 
+        pagerA.showPageNav('pagerA', 'paginationA'); 
+        pagerA.showPage(1);
+
+
+
+        $(document).on("click","#ds_view",function(){
+		document.getElementsById("selectedDS").value = this.name;
+		console.log(document.getElementsById("selectedDS").value);
+		//$("#uscon").slideDown();
+
+		//mapDataLoader(this);
+	});
+        
+</script>
+
+
+<script type="text/javascript">
+function toggle1(source) {
+  checkboxes = document.getElementsByName('cboxAL[]');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+
+
+
+<script>
+
+$("#a_stop").click(function(){
+	$("#imageStatus").attr('src',"imgs/stop.png");
+    //$("#uscon").slideUp("slow");
+    //$("#uscon").html("&nbsp;&nbsp;<b>Please run a query to see it on the map.</b>")
+  });
+
+
+</script>
+
+
+
+<script>
+$(document).on("click","#a_play",function(){
+	$("#imageStatus").attr('src',"imgs/hourglass.png");
+	
+	 //$("#uscon").slideDown();
+	
+	mapDataLoader(this);
+});
+
+</script>

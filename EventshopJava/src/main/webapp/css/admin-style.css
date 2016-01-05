@@ -1,0 +1,150 @@
+#users_table {
+	width: 100%;
+}
+
+#users_table th {
+	text-align: left;
+	background-color: #C6C6C6;
+}
+
+#users_table_wrapper {
+	margin-bottom: 25px;
+}
+
+#users_table input[type=checkbox] {
+	margin: 0px 2px 4px 7px;
+}
+
+.sorting_desc .sorting {
+	cursor: pointer;
+}
+
+#view_profile_block {
+	display: none;
+}
+
+.active {
+	background-color: #FFF;
+}
+
+.adjWidth {
+	width: 97.2%;
+}
+
+#ds_table, #query_table {
+	width: 100% !important;
+}
+
+#ds_table, #query_table th {
+	text-align: left;
+	background-color: #C6C6C6;
+}
+
+#ds_table_wrapper, #query_table_wrapper {
+	margin-bottom: 25px;
+}
+
+#ds_table, #query_table input[type=checkbox] {
+	margin: 0px 2px 4px 7px;
+}
+
+#view_ds_block, #view_ds_access {
+	display: none;
+}
+
+.img_class {
+	width: 16px;
+	height: 16px;
+	padding-bottom: 7px;
+}
+
+.img_class_stop {
+	width: 11px;
+	height: 11px;
+	padding-bottom: 7px;
+}
+
+.h16 {
+	height: 16px;
+}
+
+#view_ds_block {
+	width: 100%;
+}
+
+.selected {
+	height: auto !important;
+	width: auto !important;
+	border-color: #AAD2FA !important;
+}
+
+.available {
+	height: auto !important;
+	width: auto !important;
+	border-color: #AAD2FA !important;
+}
+
+.ui-multiselect {
+	width: auto !important;
+	border-color: #AAD2FA !important;
+}
+
+.connected-list {
+	height: 200px !important;
+}
+
+#view_querylist_block {
+	display: none;
+}
+
+.ui-widget-header {
+	background-image: none !important;
+	background-color: #AAD2FA !important;
+}
+
+.ui-widget-header a, .count {
+	color: #000 !important;
+}
+
+.ui-multiselect input.search {
+	margin: 8px !important;
+}
+
+#ds_table input[type=checkbox] {
+	margin: 0px 2px 4px 7px !important;
+}
+
+.change_access {
+	color: red !important;
+}
+
+.multiselectable select, .multiselectable div {
+	width: 183px;
+	float: left;
+}
+
+.multiselectable div * {
+	display: block;
+	margin: 0 auto;
+}
+
+.multiselectable div {
+	display: inline;
+}
+
+.multiselectable .m-selectable-controls {
+	margin-top: 2.3em;
+	width: 50px;
+}
+
+.multiselectable .m-selectable-controls button { /*margin-top: 1em;*/
+	
+}
+
+#view_dsaccess_block .item {
+	display: none;
+}
+
+#view_dsaccess_block .item.active {
+	display: block;
+}

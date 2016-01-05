@@ -1,0 +1,31 @@
+{
+      "qID":1,
+      "patternType":"grouping",
+      "dataSources":[
+         "ds1"
+      ],
+      "method":"Threshold",
+      "numGroup":"",
+      "thresholds":[
+         "60",
+         "100"
+      ],
+      "split":"False",
+      "doColoring":"True",
+      "colorCodes":[
+         "green",
+         " yellow",
+         " red"
+      ],
+      "queryName":"groupTest",
+      "timeWindow":300,
+      "latitudeUnit":"0.5",
+      "longitudeUnit":"0.5",
+      "queryStatus":"S",
+      "qryCreatorId":"78",
+      "boundingBox":"24,-125,25,-124",
+      "timeRange":[
+         1,
+         1
+      ]
+   }

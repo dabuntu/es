@@ -1,0 +1,51 @@
+
+<table style="width: 100%" id="spatialCharOpValues">
+	<tbody>
+		<tr>
+			<td colspan="2">
+				<div style="margin-top: -15px">
+					<h6>&nbsp;&nbsp;All DS
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+						DS</h6>
+					<select class="multi" multiple style="width: 100%"
+						id="spaceCharSource">
+						<option value="">None</option>
+					</select>
+				</div>
+			</td>
+			<td style="padding-left: 1%; padding-bottom: 5%">Select Spatial
+				Characterization Operator<br /> <select
+				name="sc_spatial_char_operator" id="sc_spatial_char_operator">
+					<option value="Spatial Max">Spatial Max</option>
+					<option value="Spatial Min">Spatial Min</option>
+					<option value="Spatial Average">Spatial Average</option>
+					<option value="Spatial Sum">Spatial Sum</option>
+					<option value="Epicenter">Epicenter</option>
+					<option value="Coverage">Coverage</option>
+					<option value=" Circularity">Circularity</option>
+			</select>
+			</td>
+
+		</tr>
+		<tr>
+			<td>
+				<button class="btn btn-small btn-inverse" style="margin-top: 15%"
+					id="spcharQuery" name="spchar"
+					onclick="queryGraphStart('spaceChar','spaceCharSource')">create
+					Query</button> <!--<input type="button" value="create Query" class="btn btn-small btn-inverse" style="margin-top:15%" id="spcharQuery" name="spchar" onclick="queryGraphStart('spaceChar','spaceCharSource')"/>-->
+			</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+ /*
+   $(function() {	 
+		    
+		    $('.multiS').multiSelect({
+		    	 selectableHeader: 'All DS',
+				    selectionHeader: 'Selected DS'
+			});
+		    console.log("done woith multiS");
+		  }); */
+</script>

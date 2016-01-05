@@ -1,0 +1,36 @@
+{
+      "qID":1,
+      "patternType":"filter",
+      "dataSources":[
+         "ds1"
+      ],
+      "maskMethod":"",
+      "coords":[
+         23.563987128451217,
+         -127.61718750000001,
+         49.439556958940855,
+         -61.083984375
+      ],
+      "placename":"New York City",
+      "filePath":"",
+      "valRange":[
+         "0",
+         "60"
+      ],
+      "timeRange":[
+         1,
+         1
+      ],
+      "normMode":"true",
+      "normVals":[
+         0,
+         100
+      ],
+      "queryName":"Akka_FilterTest",
+      "timeWindow":300,
+      "latitudeUnit":"0.5",
+      "longitudeUnit":"0.5",
+      "queryStatus":"S",
+      "qryCreatorId":"78",
+      "boundingBox":"24,-125,25,-124"
+}

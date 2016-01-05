@@ -1,0 +1,72 @@
+
+<table id="ds_table" cellpadding="2"></table>
+
+<br />
+
+<div class="row">
+	<div class="span12">
+		<input type="button" value='View' class="btn btn-small btn-inverse"
+			id="ds_view"> <a href="javascript:void(0);"
+			class="btn btn-small btn-inverse h16"><img src="imgs/play_32.png"
+			class="img_class" id="ds_play_all" /></a> <a href="javascript:void(0);"
+			class="btn btn-small btn-inverse h16"><img src="imgs/stop_32.png"
+			class="img_class_stop" id="ds_stop_all" /></a> <input type="button"
+			value='Delete' class="btn btn-small btn-inverse" id="ds_delete">
+	</div>
+</div>
+
+<br />
+
+<table style="width: 100%">
+	<tr>
+		<td style="width: 60%;" valign="top">
+			<div class="widget" id="view_ds_block">
+				<div class="widget-header">
+					<h3>DS Profile</h3>
+				</div>
+				<!-- /widget-header -->
+				<div class="widget-content">
+
+
+					<div class="carousel slide" id="ds-carousel">
+
+						<div class="carousel-inner" id="view_dslist_block">
+							<!--   place to add ds list -->
+						</div>
+						<a id="ds-carousel_prev" class="carousel-control left"
+							href="#ds-carousel" data-slide="prev">&lsaquo;</a> <a
+							id="ds-carousel_next" class="carousel-control right"
+							href="#ds-carousel" data-slide="next">&rsaquo;</a>
+
+					</div>
+
+				</div>
+			</div>
+
+		</td>
+		<td valign="top">
+
+			<div class="widget" id="view_ds_access">
+				<div class="widget-header">
+					<h3>DS Accessibility</h3>
+				</div>
+				<!-- /widget-header -->
+				<div class="widget-content">
+					<h6>&nbsp;&nbsp;All Users
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+						Users</h6>
+					<div id="view_dsaccess_block"></div>
+					<br />
+					<center>
+						<input type="hidden" name="selected_ds_id" id="selected_ds_id"
+							value="" /><input type="button" value='Update'
+							class="btn btn-small btn-inverse" id="update_users_ds">
+					</center>
+
+
+				</div>
+			</div>
+
+		</td>
+	</tr>
+</table>

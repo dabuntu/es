@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Heatmaps</title>
+    <style>
+        html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        }
+        #map {
+        height: 80%;
+        }
+        #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+        }
+
+        #floating-panel {
+        background-color: #fff;
+        border: 1px solid #999;
+        left: 25%;
+        padding: 5px;
+        position: absolute;
+        top: 10px;
+        z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+<div><h1>India's Cleanliness Index</h1></div>
+<div id="map"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+
+    function initMap() {
+        var map, heatmap;
+        map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 3,
+        center: {"lat":12.600000000000001,"lng":71.25},
+        mapTypeId: google.maps.MapTypeId.SATELLITE
+        });
+
+
+
+        $.ajax({
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        url: "http://54.254.138.95/eventshoplinux/rest/Emage2HeatMap/getHeatMapData" ,
+        data: JSON.stringify({ "query_id": 47 })
+        }).done(function(output){
+           	//console.log("obj is :::  "+JSON.stringify(output));
+           	var heatMapData = [];
+           	var r_temp = JSON.parse(JSON.stringify(output));
+           	$.each(r_temp, function(i, obj) {
+           	    var x  = {"lat":obj.loc.lat,"lng":obj.loc.lon};
+           	    var y = obj.value;
+           	    var z = {"location": new google.maps.LatLng(obj.loc.lat, obj.loc.lon), "weight": obj.value};
+           	    //if(y != 0) {
+           	     heatMapData.push(z);
+           	    //}
+
+                //console.log("lat is " + z.location.lat + ".   value is " + z.weight);
+
+	        });
+	        console.log(JSON.stringify(heatMapData));
+	        heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatMapData,
+            map: map
+          });
+
+        }).fail( function(jqXHR, textStatus, errorThrown,output){
+         	console.log("Could not stop query "+jqXHR);
+       	   	console.error(errorThrown);
+        });
+
+
+
+
+        //for (var i = 0; i < lats.length; i++) {
+        //
+        //    latlng.push(new google.maps.LatLng(lats[i], longs[i]));
+        //    var x = new google.maps.LatLng(lats[i], longs[i]);
+        //    marker = new google.maps.Marker({'position': x});
+        //    markers.push(marker);
+        //}
+        //console.log("log is " + latlng);
+
+
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCafuiiO6ozEAfO22rc0G5iQoFRRKYwQAE&signed_in=true&libraries=visualization&callback=initMap">
+</script>
+
+</body>
+</html>

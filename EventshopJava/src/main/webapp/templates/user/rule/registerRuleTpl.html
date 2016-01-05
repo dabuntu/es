@@ -1,0 +1,40 @@
+<table class="table table-bordered sortable" id="ruleTable">
+    <thead>
+    <tr>
+        <th>RID</th>
+        <th>Rule Name</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <% for (var i = 0; i < Data.length; i++) { %>
+
+    <tr>
+        <td>
+            <%=Data[i].ruleID%>
+        </td>
+
+        <td>
+            <div style="width: 55px; word-wrap: break-word;">
+                <span id="<%=Data[i].ruleID%>" style="text-decoration: under-line; color: blue; cursor: pointer;"><%=Data[i].ruleName%></span>
+            </div>
+        </td>
+    </tr>
+
+    <% } %>
+
+    </tbody>
+
+
+</table>
+
+<script type="text/javascript">
+
+      //Pagination for Rules
+        var pagerR = new Pager('ruleTable', 5);
+        pagerR.init();
+        pagerR.showPageNav('pagerR', 'paginationR');
+        pagerR.showPage(1);
+
+
+</script>

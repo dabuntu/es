@@ -1,0 +1,207 @@
+
+<table style="width: 95%" id="spatialPatternOpValues">
+	<thead>
+		<th align="left" style="padding-right: 3%">&nbsp;</th>
+		<th align="left" style="padding-right: 3%">&nbsp;</th>
+		<th align="left" style="padding-left: 3%">Normalize Pattern</th>
+		<th align="left" style="padding-left: 2%">Normalize pattern value
+		</th>
+		<th align="left">Select Pattern Source</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="padding-bottom: 5%" colspan="2" valign="top">
+				<div style="margin-top: -61px">
+					<h6>&nbsp;&nbsp;All DS
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+						DS</h6>
+					<select class="multi" multiple style="width: 100%" id="pSource">
+						<option value="">None</option>
+					</select>
+				</div>
+			</td>
+
+			<td style="padding-left: 2%; padding-bottom: 5%" valign="top"><select
+				style="width: 100%" id="sp_size_norm">
+					<option value="d1">True</option>
+					<option value="d2">False</option>
+			</select></td>
+			<td style="padding-left: 2%; padding-bottom: 5%" valign="top"><select
+				style="width: 75%" id="sp_value_norm">
+					<option value="d1">True</option>
+					<option value="d2">False</option>
+			</select></td>
+			<td style="padding-left: 1%; padding-bottom: 5%; width: 41%"
+				valign="top"><select style="width: 70%"
+				onchange="showSelected(this.value)" id="sp_pattern_type">
+					<option value="-1">select</option>
+					<option value="8">Input from file</option>
+					<option value="9">Create new</option>
+			</select>
+
+
+				<div id="showdivision8" style="display: none;">
+					<input type="file" name="spatialPatternInputFile"
+						id="spatialPatternInputFile" />
+				</div>
+				<div id="showdivision9" style="display: none;">
+					<table>
+						<tr>
+							<td valign="middle">Number of Rows</td>
+							<td><input type="text" name="sp_num_rows" id="sp_num_rows"
+								style="width: 60%" /></td>
+						</tr>
+						<tr>
+							<td valign="middle">Number of Columns</td>
+							<td><input type="text" name="sp_num_cols" id="sp_num_cols"
+								style="width: 60%" /></td>
+						</tr>
+						<tr>
+							<td valign="top">Select Spatial Pattern</td>
+							<td><select style="width: 70%"
+								onchange="showSelectedInsideDivs(this.value)" id="prtn_gs_ln">
+									<option value="-1">select</option>
+									<option value="11">Gaussian</option>
+									<option value="10">Linear</option>
+							</select>
+
+								<div id="showdivision10" style="display: none;">
+
+									<table>
+										<tr>
+											<td>Start Position(x, y):</td>
+											<td><input type="text" style="width: 33%"
+												id="ln_start_position"></td>
+										</tr>
+										<tr>
+											<td>Start Value:</td>
+											<td><input type="text" style="width: 33%"
+												id="ln_start_value"></td>
+										</tr>
+										<tr>
+											<td>Direction Gradient:</td>
+											<td><input type="text" style="width: 33%"
+												id="ln_direct_gradient"></td>
+										</tr>
+										<tr>
+											<td>Value Gradient:</td>
+											<td><input type="text" style="width: 33%"
+												id="ln_value_gradient"></td>
+										</tr>
+									</table>
+
+								</div>
+
+								<div id="showdivision11" style="display: none;">
+
+									<table>
+										<tr>
+											<td>Center(x, y):</td>
+											<td><input type="text" style="width: 40%" id="gs_center"></td>
+										</tr>
+										<tr>
+											<td>Standard Deviation(var_x, var_y):</td>
+											<td><input type="text" style="width: 40%" id="gs_sd"></td>
+										</tr>
+										<tr>
+											<td>Amplitude:</td>
+											<td><input type="text" style="width: 40%" id="gs_amp"></td>
+										</tr>
+									</table>
+								</div></td>
+						</tr>
+
+					</table>
+				</div></td>
+
+		</tr>
+		<tr>
+			<td>
+				<button class="btn btn-small btn-inverse" style="margin-top: 15%"
+					id="spmatchingQuery" name="spmatching"
+					onclick="queryGraphStart('pattrn','pSource')">create Query</button>
+				<!--<input type="button" value="create Query" class="btn btn-small btn-inverse" style="margin-top:15%" id="spmatchingQuery" name="spmatching" onclick="queryGraphStart('pattrn','pSource')"/>--->
+			</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+ /*  $(function() {	 
+		    
+		    $('.multiP').multiSelect({
+		    	 selectableHeader: 'All DS',
+				    selectionHeader: 'Selected DS'
+			});
+		    console.log("done woith multiP");
+		  });*/
+</script>
+
+<!-- for reading the file -->
+
+
+<div id="file_data1_pattern" style="display: none"></div>
+
+<script>
+// Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+
+} else {
+  alert('The File APIs are not fully supported by your browser.');
+}
+
+function readSingleFiless(evt,id) { 
+	//Retrieve the first (and only!) File from the FileList object
+    
+    var f = evt.files[0]; 
+
+    if (f) {
+               
+      var r = new FileReader();
+      r.onload = function(e) { 
+                      var contents = e.target.result;
+                      
+                     alert("Spatial patterns"+contents);
+                       $("#file_data1_"+id).html(contents);
+                       
+        //alert( "Got the file" 
+              //+"name: " + f.name + "n"
+              //+"type: " + f.type + "n"
+              //+"size: " + f.size + " bytesn"
+             // + "starts with: " + contents.substr(1, contents.indexOf("n"))
+       // );  
+      }
+     //alert(r.result);
+                r.readAsBinaryString(f);  //readAsBinaryString(file)
+    } else { 
+      alert("Failed to load file");    
+    }
+    //alert(contents);             // getcontent(f);
+  }
+function getcontent(e){ //alert(e); 
+
+	 alert("renuuu");
+file = fopen(e);
+file_length = flength(file);
+content = fread(file, file_length);
+//document.getElementById("myDiv").innerText = content;          
+
+
+}
+  
+ 
+ var rr=document.getElementById('spatialPatternInputFile').addEventListener('change', function(){readSingleFiless(this,'pattern')}, false);
+ 
+ var r4 =  $('#file_data1_pattern').html();
+ 
+ 
+ 
+
+ 
+ 
+
+ 
+ 
+</script>
+
+<!-- End of read file -->

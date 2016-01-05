@@ -1,0 +1,103 @@
+
+<table style="width: 100%" id="groupingOpValues">
+	<thead>
+		<th align="left" style="padding-right: 2%">&nbsp;</th>
+		<th align="left" style="padding-right: 1%">&nbsp;</th>
+		<th align="left">Groupby</th>
+		<th align="left" style="padding-left: 1%">&nbsp;</th>
+		<!-- <th align="left">
+  Separate images for groups?
+  </th>
+ 
+ <th align="left">
+  Group in colors?
+  </th>
+   -->
+		<th align="left">Group Colors</th>
+	</thead>
+	<tbody>
+		<tr>
+
+			<td colspan="2">
+				<div style="margin-top: -40px">
+					<h6>&nbsp;&nbsp;All DS
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+						DS</h6>
+					<select class="multi" multiple style="width: 100%" id="gSource">
+						<option value="">None</option>
+					</select>
+				</div>
+			</td>
+			<td style="padding-bottom: 5%"><select
+				style="width: 90%; margin-left: 1%" id="groupBy"
+				onchange="showSelected(this.value)">
+
+					<option value="-1" selected="selected">select</option>
+					<option value="6">K-Means</option>
+					<option value="7">Threshold</option>
+
+			</select> <br />
+				<table align="left">
+					<tr>
+						<td><div id="showdivision6" style="display: none;">
+								No.of Groups:<br /> <input type="text" value=""
+									id="num_of_groups" placeholder="Enter no of Groups"
+									style="width: 90%;">
+							</div></td>
+						<td><div id="showdivision7" style="display: none;">
+								Threshold values(val1,val2,..):<br /> <input type="text"
+									id="threshol_vals" value="30,70" placeholder="30,70"
+									style="width: 90%;">
+							</div></td>
+					</tr>
+				</table></td>
+			<td style="padding-bottom: 5%">&nbsp;</td>
+			<td style="padding-bottom: 5%"><select
+				id="seperate_group_images" style="width: 75%; display: none"
+				disabled>
+					<option value="True">True</option>
+					<option value="False" selected>False</option>
+			</select></td>
+			<td style="padding-bottom: 5%"><select id="group_in_colors"
+				style="width: 75%; display: none" disabled>
+					<option value="True" selected>True</option>
+					<option value="False">False</option>
+			</select></td>
+
+
+			<td style="padding-bottom: 5%">
+				<!--  <input  id="group_in_colors" value="True" disabled></input>
+   <input id="seperate_group_images" value="False" disabled></input>
+  --> <input type="text" name="group_colors" id="group_colors"
+				value="green, yellow, red" placeholder="green, yellow, red"
+				style="width: 80%">
+			</td>
+
+		</tr>
+		<tr>
+			<td>
+				<button class="btn btn-small btn-inverse" style="margin-top: 15%"
+					id="groupingQuery" name="grouping"
+					onclick="queryGraphStart('group','gSource')">create Query</button>
+				<!--<input type="button" value="create Query" class="btn btn-small btn-inverse" style="margin-top:15%" id="groupingQuery" name="grouping" onclick="queryGraphStart('group','gSource')"/>-->
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+   /*
+   $(function() {	 
+		    
+		    $('.multiG').multiselectable({
+		    	 selectableHeader: 'All DS',
+				    selectionHeader: 'Selected DS'
+			});
+		    console.log("done woith multi");
+		  });*/
+</script>

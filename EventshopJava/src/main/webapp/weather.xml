@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<current>
+    <city id="1252756" name="Yelandur">
+        <coord lon="77" lat="12"/>
+        <country>IN</country>
+        <sun rise="2015-06-29T00:30:46" set="2015-06-29T13:20:10"/>
+    </city>
+    <temperature value="303.273" min="303.273" max="303.273" unit="kelvin"/>
+    <humidity value="54" unit="%"/>
+    <pressure value="938.08" unit="hPa"/>
+    <wind>
+        <speed value="6" name="Moderate breeze"/>
+        <direction value="252.501" code="WSW" name="West-southwest"/>
+    </wind>
+    <clouds value="0" name="clear sky"/>
+    <visibility/>
+    <precipitation mode="no"/>
+    <weather number="800" value="Sky is Clear" icon="01d"/>
+    <lastupdate value="2015-06-29T06:06:34"/>
+</current>

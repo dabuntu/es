@@ -1,0 +1,103 @@
+<table class="table table-bordered sortable" id="queryTable">
+	<thead>
+		<tr>
+			<th>QID</th>
+			<th>Query Name</th>
+			<th>Status</th>
+			<th><input type="checkbox" onClick="toggle1(this)" /><br /></th>
+
+		</tr>
+	</thead>
+	<tbody>
+		<% for (var i = 0; i < Data.length; i++) { %>
+
+		<tr>
+			<td><a href="webresources/queryservice/qcode/<%=Data[i].qID%>"
+				target="_blank"><%=Data[i].qID%></a></td>
+
+			<td><div style="width: 55px; word-wrap: break-word;">
+					<a href="qemage.html?qid=<%=Data[i].qID%>" target="_blank"><%=Data[i].queryName%></a>
+				</div></td>
+			<td><% if(Data[i].status == 'S') {%> Stopped <% }else{ %>
+				Running <% } %></td>
+
+			<td><% if(Data[i].control == 0) {%> <!--<a class="btn btn-small btn-inverse h16" href="#"><img id="q_play_<%=Data[i].qID%>" name="<%=Data[i].qID%>" class="img_class" src="imgs/play_32.png"></a>-->
+				<button class="start_q btn btn-primary btn-small"
+					id="<%=Data[i].qID%>">R</button> <!-- <input type="checkbox" name="cboxQR[]" value="<%=Data[i].qID%>" id="regquery"> -->
+				<% }else{ %>
+				<button class="stop_q btn btn-success btn-small"
+					id="<%=Data[i].qID%>">P</button> <!-- 
+										<a class="btn btn-small btn-inverse h16" href="#"><img id="q_stop_<%=Data[i].qID%>" name="<%=Data[i].qID%>" class="img_class_stop" src="imgs/stop_32.png"></a>
+										 --> <% } %>
+
+			</td>
+
+		</tr>
+
+
+
+		<% } %>
+		<div class="Querystopplay" style="margin: 15px 0px 10px 0px;">
+			<a class="btn btn-small btn-inverse h16" href="#"><img
+				id="q_play" name="" class="img_class" src="imgs/play_32.png"></a>
+
+			<a class="btn btn-small btn-inverse h16" href="#"><img
+				id="q_stop" name="" class="img_class_stop" src="imgs/stop_32.png"></a></span>
+		</div>
+
+
+
+	</tbody>
+
+
+</table>
+<script type="text/javascript">
+		
+      //Pagination for Query
+        var pagerQ = new Pager('queryTable', 4); 
+        pagerQ.init(); 
+        pagerQ.showPageNav('pagerQ', 'paginationQ'); 
+        pagerQ.showPage(1); 
+        
+</script>
+
+
+<script type="text/javascript">
+function toggle1(source) {
+  checkboxes = document.getElementsByName('cboxQR[]');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
+
+
+
+<script>
+
+$("#q_stop").click(function(){
+	$("#imageStatus").attr('src',"imgs/stop.png");
+    //$("#uscon").slideUp("slow");
+    //$("#uscon").html("&nbsp;&nbsp;<b>Please run a query to see it on the map.</b>")
+  });
+
+
+</script>
+
+
+
+<script>
+$(document).on("click","#q_play",function(){
+	$("#imageStatus").attr('src',"imgs/hourglass.png");
+	
+	 //$("#uscon").slideDown();
+	
+	mapDataLoader(this);
+});
+
+</script>
+
+
+
+
+

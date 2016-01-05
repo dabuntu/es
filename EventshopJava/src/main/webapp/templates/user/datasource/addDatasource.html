@@ -1,0 +1,190 @@
+<div id="basic-modal-content" title="Basic dialog">
+	<div id="DSTabs" style="margin-bottom: 2%">
+		<ul style="background: #aad2fa">
+			<li><a href="#dsConfig">Data Source Configuration<img
+					src='imgs/filter.png' style="height: 32px; width: 32"></a></li>
+			<li><a href="#initConfig">Initial Resolution<img
+					src='imgs/grouping.png' style="height: 32px; width: 32"></a></li>
+			<li><a href="#finalConfig">Final Resolution<img
+					src='imgs/aggregation.png' style="height: 32px; width: 32"></a></li>
+		</ul>
+		<form name="addDataSourceForm" id="addDataSourceForm"
+			enctype="multipart/form-data" action="#" method="POST">
+			<div id="dsConfig">
+				<div>
+					<table>
+						<tr>
+							<td><label><span style="color: red">* </span>ThemeXXX</label></td>
+							<td><input type="text" name="dsTheme" id="dsTheme"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Name</label></td>
+							<td><input type="text" name="dsName" id="dsName"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>URL/Path</label></td>
+							<td><input type="text" name="dsPath" id="dsPath"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label>Data Formatttt</label></td>
+							<td><select id="dataFormat" name="dsDataFormat"
+								style="margin-left: 5%" onchange="getDataFormatInfo(this.value)">
+									<option value="select">Select</option>
+									<option value="stream">Data Stream</option>
+									<option value="visual">Visual Image</option>
+									<option value="csv">CSV File</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td colspan="2"><input type="hidden" name="dataSourceId"
+								id="dataSourceId" value="0"> <input type="text"
+								name="wrapperId" id="wrapperId" value="0">
+								<div id="dataFormatData"></div></td>
+						</tr>
+
+					</table>
+				</div>
+			</div>
+			<div id="initConfig">
+				<div>
+					<table>
+						<tr>
+							<td><label><span style="color: red">* </span>Time
+									Window(in secs)</label></td>
+							<td><input type="text" name="dsTime" id="dsTime"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label>Synchronize at nth Sec</label></td>
+							<td><input type="text" name="dsSync" id="dsSync"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Unit of
+									Latitude</label></td>
+							<td><input type="text" name="dsUnitLat" id="dsUnitLat"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Unit of
+									Longitude</label></td>
+							<td><input type="text" name="dsUnitLong" id="dsUnitLong"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Southwest
+									of Latitude</label></td>
+							<td><input type="text" name="dsSouthLat" id="dsSouthLat"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Southwest
+									of Longitude</label></td>
+							<td><input type="text" name="dsSouthLong" id="dsSouthLong"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Northeast
+									of Latitude</label></td>
+							<td><input type="text" name="dsNorthLat" id="dsNorthLat"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Northeast
+									of Longitude</label></td>
+							<td><input type="text" name="dsNorthLong" id="dsNorthLong"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<input id="genEmage" type="checkbox" name="genEmage" value="genEmage" checked>&nbsp; Generate Emage <br /><br/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								Mongo Query:<textarea name="dsQuery" id="dsQuery" cols="15" rows="3" style="margin-left: 5%"></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<!-- <div >
+			  <input type="button" value="Add" style="margin-top:5%;" id="addDataSourceBtn"/>
+		      <input type="button" value="Cancel" style="margin-top:5%;" id="addDataSourceCancel"/>
+		    </div> -->
+			</div>
+			<div id="finalConfig">
+				<div>
+					<table>
+						<tr>
+							<td><label><span style="color: red">* </span>Time
+									Window(in sec)</label></td>
+							<td><input type="text" name="dsTime" id="dsFTime"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label>Synchronize at nth Sec</label></td>
+							<td><input type="text" name="dsSync" id="dsFSync"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Unit of
+									Latitude</label></td>
+							<td><input type="text" name="dsUnitLat" id="dsFUnitLat"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Unit of
+									Longitude</label></td>
+							<td><input type="text" name="dsUnitLong" id="dsFUnitLong"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Southwest
+									of Latitude</label></td>
+							<td><input type="text" name="dsSouthLat" id="dsFSouthLat"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Southwest
+									of Longitude</label></td>
+							<td><input type="text" name="dsSouthLong" id="dsFSouthLong"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Northeast
+									of Latitude</label></td>
+							<td><input type="text" name="dsNorthLat" id="dsFNorthLat"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Northeast
+									of Longitude</label></td>
+							<td><input type="text" name="dsNorthLong" id="dsFNorthLong"
+								style="margin-left: 5%" /></td>
+						</tr>
+					</table>
+				</div>
+				<div>
+					<input type="button" value="Add" style="margin-top: 5%;"
+						id="addDataSourceBtn" /> <input type="button" value="Cancel"
+						style="margin-top: 5%;" id="addDataSourceCancel1" />
+						
+						
+					<script>
+		      
+		      $('#addDataSourceCancel1').click(function(){		
+					disablePopup();  // function close pop up
+				});
+		      
+		      </script>
+
+				</div>
+				
+			</div>
+			</form>
+	</div>
+</div>
+

@@ -1,0 +1,1 @@
+ALTER TABLE Datasource_Resolution ADD syncTime INT NOT NULL DEFAULT 300000;

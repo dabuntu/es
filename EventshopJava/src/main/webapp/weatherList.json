@@ -1,0 +1,327 @@
+{
+  "message": "accurate",
+  "cod": "200",
+  "count": 10,
+  "list": [
+    {
+      "id": 495260,
+      "name": "Shcherbinka",
+      "coord": {
+        "lon": 37.559719,
+        "lat": 55.499722
+      },
+      "main": {
+        "temp": 294.23,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.15
+      },
+      "dt": 1435731186,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 564517,
+      "name": "Dubrovitsy",
+      "coord": {
+        "lon": 37.486698,
+        "lat": 55.43969
+      },
+      "main": {
+        "temp": 294.35,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 570578,
+      "name": "Butovo",
+      "coord": {
+        "lon": 37.57972,
+        "lat": 55.548328
+      },
+      "main": {
+        "temp": 294.36,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 545782,
+      "name": "Kommunarka",
+      "coord": {
+        "lon": 37.489319,
+        "lat": 55.569519
+      },
+      "main": {
+        "temp": 294.36,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 6417490,
+      "name": "Lesparkkhoz",
+      "coord": {
+        "lon": 37.601391,
+        "lat": 55.54306
+      },
+      "main": {
+        "temp": 294.36,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 526736,
+      "name": "Sed’moy Mikrorayon",
+      "coord": {
+        "lon": 37.57972,
+        "lat": 55.562222
+      },
+      "main": {
+        "temp": 294.36,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 473051,
+      "name": "Vlas’yevo",
+      "coord": {
+        "lon": 37.379444,
+        "lat": 55.460278
+      },
+      "main": {
+        "temp": 294.35,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 578680,
+      "name": "Bachurino",
+      "coord": {
+        "lon": 37.52,
+        "lat": 55.580002
+      },
+      "main": {
+        "temp": 294.36,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 554629,
+      "name": "Shestoy Mikrorayon",
+      "coord": {
+        "lon": 37.583328,
+        "lat": 55.566669
+      },
+      "main": {
+        "temp": 294.36,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    },
+    {
+      "id": 508101,
+      "name": "Podolsk",
+      "coord": {
+        "lon": 37.554722,
+        "lat": 55.424179
+      },
+      "main": {
+        "temp": 294.35,
+        "pressure": 1015,
+        "humidity": 56,
+        "temp_min": 293.15,
+        "temp_max": 295.37
+      },
+      "dt": 1435731486,
+      "wind": {
+        "speed": 2,
+        "deg": 360,
+        "var_beg": 290,
+        "var_end": 90
+      },
+      "sys": {"country": ""},
+      "clouds": {"all": 0},
+      "weather": [
+        {
+          "id": 800,
+          "main": "Clear",
+          "description": "Sky is Clear",
+          "icon": "01d"
+        }
+      ]
+    }
+  ]
+}

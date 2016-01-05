@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/leaflet.css" />
+<style>
+@import
+	url(http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css)
+	;
+@import url(http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.css);
+
+#overlay {
+	fill: None;
+	stroke: #ff00ff;
+	stroke-width: 4px;
+}
+
+select {
+	margin-left: 15px;
+}
+</style>
+<script src="js/libs/jquery/jquery-1.4.2.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.6.1/leaflet.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="js/libs/bootstrap/bootstrap.min.js"></script>
+
+<style>
+#map {
+	position: absolute;
+	height: 600px;
+	width: 400px;
+	margin: 20 0 0 0;
+	padding: 0;
+	border: 1px solid black;
+	border-radius: 8px;
+}
+
+#codeContainer {
+	position: absolute;
+	height: 420px;
+	width: 30%;
+	margin: 20 0 0 10;
+	padding: 0;
+	border: 1px solid black;
+	border-radius: 8px;
+	overflow: auto
+}
+
+.bg-warning {
+	background-color: #fcf8e3;
+}
+</style>
+</head>
+<body>
+<div style="margin: 10">
+	<div class="row">
+		<div class="span8">
+			Query ID: <span id="qid"></span>,
+			<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Time: <span id="st"></span>,-->
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last Generated Emage Time: <span id="et"></span>
+		</div>
+		<div class="span4">
+			<p id="status" style="margin: 10px"></p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span8">
+			Min Value: <span id="min"></span>,
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Value: <span id="max"></span>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Value: <span id="value"></span>
+			<br>Color:&nbsp;&nbsp;&nbsp;
+			<svg id="svgColor" xmlns="http://www.w3.org/2000/svg" width="450"
+				height="10">
+			  	<defs>
+			    	<linearGradient id="myLinearGradient1" x1="0%" y1="0%" x2="100%"
+					y2="0%" spreadMethod="pad">
+			      	<stop offset="0%" stop-color="#f0f0f0" stop-opacity="1" />
+			      	<stop offset="100%" stop-color="#000000" stop-opacity="1" />
+			    	</linearGradient>
+			  	</defs>
+			</svg>
+		</div>
+		<div class="span4">
+			<p style="margin: 10px">
+				Select result resolution:
+				<label class="radio-inline"> <input type="radio" name="radioLevel" id="level0" value="0" checked> 0 </label>
+				<label class="radio-inline"> <input type="radio" name="radioLevel" id="level1" value="1"> 1 </label>
+				<label class="radio-inline"> <input type="radio" name="radioLevel" id="level2" value="2"> 2 </label>
+				<label class="radio-inline"> <input type="radio" name="radioLevel" id="level3" value="3"> 3 </label>
+				<label class="radio-inline"> <input type="radio" name="radioLevel" id="level4" value="4"> 4 </label>
+			</p>
+		</div>
+	</div>
+	<div class="row"></div>
+	<div class="row">
+		<div class="span8">
+			<div id="map"></div>
+		</div>
+		<div class="span4">
+			<div id="codeContainer">
+				<a id="showcode" class="btn btn-primary" style="margin: 10">toggle
+					code</a>
+				<div id="code" style="white-space: pre; margin: 10"></div>
+			</div>
+
+		</div>
+	</div>
+</div>
+<div id="image"></div>
+
+
+<script>
+$(document).ready(function () {
+	// set flag
+	var grouping = false, colBar = false, codeBox = false;
+	var colGroup;
+	var level = $("input[name=radioLevel]:checked").val();
+	
+	$("input[name=radioLevel]:radio").change( function(){
+		console.log("selected level: " + $(this).val());
+		level = $(this).val();
+		loadData();
+	});
+	$('.hide').hide();
+	$('#showcode').click(function(){
+		if(!codeBox){
+			loadCode();		// genearte code
+			//alert('load code');
+		} else{
+			$('#code').toggle();
+		}
+	});
+	var width = 800,
+	height = 420, 
+	zoom = 4;
+	var cm = ", ";
+	
+	function getUrlParam(key){
+		var pageurl = window.location.search.substring(1);
+		var urlvar = pageurl.split('&');
+		for(var i = 0; i < urlvar.length; i++){
+			var name = urlvar[i].split('=');
+			if(name[0] == key){
+				return name[1];
+			}
+		}
+	}
+	var qid = getUrlParam('qid');
+	//var level = getUrlParam('level');
+	//alert(qid);
+	
+	function loadData(){
+		qid = document.getElementById("qid").innerHTML;
+		group.selectAll("rect").remove();
+		loadEmage();
+	}
+
+	function project(point) {
+		var latlng = new L.LatLng(point[1], point[0]);
+		var layerPoint = map.latLngToLayerPoint(latlng);
+		return [layerPoint.x, layerPoint.y];
+	}
+
+	d3.select("div#map").attr("style", "width: "+width+"px; height: "+height+"px");
+	
+	var map = L.map('map').setView([39,-111], zoom);	// lat,long
+	//var map = L.map('map').setView([52.52,13.384], 13);
+		
+	// Base Layers
+	var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
+	var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Add some attributes here!'});
+	var openStreet = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+	var baseLayers = {
+		"Stamen": stamen, 
+		"Toolserver-mapnik":toolserver,
+		"OpenStreetMap": openStreet
+	};
+	L.control.layers(baseLayers).addTo(map);
+	  
+	// adding a svgContainer to the overlay pane of the Leaflet-map 
+	var svgContainer = d3.select(map.getPanes().overlayPane).append("svg").attr("width", width + 400).attr("height", height);
+	var group= svgContainer.append("g").attr("class", "leaflet-zoom-hide")
+	var pathh = d3.geo.path().projection(project);
+	
+	var overlays, emagee, feature, bounds;
+		
+	loadEmage();	// generate map
+	
+	
+	
+	map.on("viewreset", reset);
+	map.on("drag", reset);
+	
+	
+	function loadEmage(){
+		console.log("Inside type of level, qid is " +qid);
+		var jsonFile = "webresources/queryservice/qemage/"+qid;
+		if(typeof level != 'undefined' && level != 0){
+			console.log("Inside type of level, qid is " +qid + "level is " + level);
+			jsonFile = "webresources/queryservice/qemage/"+qid+"/"+level;
+		}
+		//alert(jsonFile);
+		queue()
+	    	.defer(d3.json, jsonFile)
+	    	.await(ready);
+		function ready(error, emage) {
+			document.getElementById("qid").innerHTML = qid;
+			if(typeof emage == 'undefined'){
+				$("#status").html( "Output is not ready!");
+				$("#status").addClass("btn btn-warning");
+			} else{
+				$("#status").html( "Output is ready!");
+				$("#status").addClass("btn btn-success");
+				document.getElementById("et").innerHTML = emage.endTimeStr;
+				document.getElementById("min").innerHTML = emage.min;
+				document.getElementById("max").innerHTML = emage.max;
+				document.getElementById("value").innerHTML = emage.value;
+				if(typeof emage.colors != "undefined" && emage.colors.length > 0){
+					grouping = true;
+					colGroup = emage.colors;
+					console.log(colGroup + ", " + colGroup[0] + ", " + colGroup[1]);
+				}
+				init(emage);
+				createColorBar();	// show color code
+			}
+			
+		}
+	}
+	
+	function init(emage){
+		console.log("emage obj is " + emage);
+		
+		emagee = emage;
+		var center = [emage.swLat + (emage.row/2)*emage.latUnit, emage.swLong + (emage.col/2)*emage.longUnit];
+		console.log("center is " + center);
+		map.setView(center, 5);	// lat,long
+		
+		var data = null,
+			cells = null;
+	    // Craet E-mage map overlay
+		createEmage(emage);
+	}
+	
+	function loadCode(){
+		jQuery.get("webresources/queryservice/qcode/"+qid, function(data) {
+			  $('#code').html(data);
+			  codeBox = true;
+		});
+	}
+	
+	function createColorBar(){
+		if(!colBar){
+			var svgns = "http://www.w3.org/2000/svg";
+			var height = 10;
+			if(grouping){
+				var numGroup = colGroup.length;
+				var width = 450/numGroup;
+				for (var i = 0; i < numGroup; i++) {
+				    var rect = document.createElementNS(svgns, 'rect');
+				    rect.setAttributeNS(null, 'x', i*width);
+				    rect.setAttributeNS(null, 'y', 0);
+				    rect.setAttributeNS(null, 'height', height);
+				    rect.setAttributeNS(null, 'width', width);
+				    rect.setAttributeNS(null, 'fill', colGroup[i]);
+				    document.getElementById('svgColor').appendChild(rect);
+				}
+			} else{
+				var rect = document.createElementNS(svgns, 'rect');
+				rect.setAttributeNS(null, 'x', 0);
+				rect.setAttributeNS(null, 'y', 0);
+				rect.setAttributeNS(null, 'height', 10);
+				rect.setAttributeNS(null, 'width', 450);
+				rect.setAttributeNS(null,'fill','url(#myLinearGradient1)');
+				document.getElementById('svgColor').appendChild(rect);
+			}
+			colBar = true;
+		}
+	}
+	function createEmage (emage){
+		var	color = d3.interpolateRgb("#f0f0f0", "#000000");
+		//var color = d3.scale.linear().domain([emage.min, emage.max])
+		//				.interpolate(d3.interpolateRgb)
+		//				.range(["#fff", "#000"]);
+		var emageData = convertArray2LalLongData(emage);
+		var emMin = emage.min, emMax = emage.max;
+		
+		var swp = project([emage.swLong, emage.swLat]);
+		var nep = project([emage.neLong, emage.neLat]);
+		var emageW = Math.abs(nep[0] - swp[0]);
+		var emageH = Math.abs(nep[1] - swp[1]);
+		
+		//console.log("createEmage emageW/H " + emageW + "," + emageH);
+	
+	    //console.log("createEmage emageData" + emageData[0].lat + cm + emageData[0].lng + cm + emageData[0].value);
+	    var w = emageW/emage.col + 1;
+	    var h = emageH/emage.row + 1;
+	    var emDiff = emMax - emMin;
+	    if(grouping){
+	    	console.log("Inside createemage-grouping col =  " + emage.col + "row = " + emage.row)
+	    	feature = group.selectAll("path")
+			.data(emageData)
+			.enter().append("svg:rect")
+				.attr("x", function(d) { return d.lat})
+				.attr("y", function(d) { return d.lng})
+				.attr("width", w)
+				.attr("height", h)
+				.attr("fill", function(d) { return colGroup[d.value]})
+				.attr("fill-opacity", 0.35)
+				//.attr("stroke", "#fff")
+				.attr("cell", function(d) { return "r" + d.x + "c" + d.y})
+	    	.append("svg:title")
+	    	   .text(function(d) { return d.value; });
+		} else{
+			feature = group.selectAll("path")
+			.data(emageData)
+			.enter().append("svg:rect")
+				.attr("x", function(d) { return d.lat})
+				.attr("y", function(d) { return d.lng})
+				.attr("width", w)
+				.attr("height", h)
+				.attr("fill", function(d) { return color((d.value - emMin)/(emDiff))})
+				.attr("fill-opacity", 0.75)
+				//.attr("stroke", "#fff")
+				.attr("cell", function(d) { return "r" + d.x + "c" + d.y})
+			.append("svg:title")
+	    	   .text(function(d) { return d.value; });
+		}
+	    
+	    
+	}
+	
+	function convertArray2LalLongData(emage){
+		var em = [];
+		for(var i = 0; i < emage.image.length; i++){
+			if(emage.image[i] != "NaN"){
+				var p = project(array2LongLat(emage, i));
+				em.push({
+					x: i/emage.col,
+					y: i%emage.col,
+					lat: p[0],
+					lng: p[1],// - (i%emage.col)*zoom/2,
+					value: emage.image[i]
+				});
+			}
+		}
+		return em;
+	}
+	
+	function array2LongLat(emage, i){
+		// note! in drawing rectangle the starting point x,y is at the topleft
+		var lat = (emage.row - (Math.floor(i/emage.col))) * emage.latUnit + emage.swLat;
+		var lng = emage.swLong + (Math.floor(i%emage.col))*emage.longUnit;
+		//console.log("i [lng, lat]" + i + " [" + lng + "," + lat + "]");
+		return [lng, lat];
+	}
+	
+	function reset() {	// when zoom or drag on the map
+		
+		// set this bounds to match with map boundingbox (to fix the location of hide/show overlay)
+		bounds = [[map.getBounds()._southWest.lng, map.getBounds()._southWest.lat],[map.getBounds()._northEast.lng, map.getBounds()._northEast.lat]]
+	    var bottomLeft = project(bounds[0]),
+	    topRight = project(bounds[1]);
+	 
+	    svgContainer.attr("width", topRight[0] - bottomLeft[0])
+	         .attr("height", bottomLeft[1] - topRight[1])
+	         .style("margin-left", bottomLeft[0] + "px")
+	         .style("margin-top", topRight[1] + "px");
+	 	
+	    group.attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+	 	//alert("reset");
+	 	group.selectAll("rect").remove();
+	 	createEmage(emagee);
+	 }
+	setInterval(loadData, 3600000);	// callling loaddata() after 5mins
+});
+	
+	</script>
+</body>
+</html>
+

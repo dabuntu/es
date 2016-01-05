@@ -1,0 +1,1 @@
+ALTER TABLE  `Alerts` CHANGE  `alert_id`  `alert_id` INT( 11 ) NOT NULL AUTO_INCREMENT ;

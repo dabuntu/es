@@ -1,0 +1,58 @@
+{
+srcVarName: null
+wrapper: null
+srcName: "twitter-asthama"
+srcFormat: "stream"
+access: null
+boundingbox: null
+archive: 0
+unit: 0
+emailOfCreator: null
+userId: null
+srcID: "10"
+srcTheme: "asthama"
+url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpU2SaFGpTUS2nhVX3Pcp17cKEPp7r6tH6hI86I-WvTrykAw0BA6guA1Ou"
+supportedWrapper: "Twitter"
+bagOfWords: [2]
+0:  "asthama"
+1:  "allergy"
+visualParam: {
+translationMatrix: null
+colorMatrix: null
+maskPath: null
+ignoreSinceNumber: 0
+tranMatPath: null
+colorMatPath: null
+}
+initParam: {
+end: 0
+start: 0
+timeWindow: 3600
+latUnit: 2
+longUnit: 2
+syncAtMilSec: 0
+swLat: 24
+swLong: -125
+neLat: 50
+neLong: -66
+numOfColumns: 30
+numOfRows: 13
+}
+finalParam: {
+end: 0
+start: 0
+timeWindow: 0
+latUnit: 0
+longUnit: 0
+syncAtMilSec: 0
+swLat: 0
+swLong: 0
+neLat: 0
+neLong: 0
+numOfColumns: 0
+numOfRows: 0
+}
+type: null
+control: 0
+status: null
+}

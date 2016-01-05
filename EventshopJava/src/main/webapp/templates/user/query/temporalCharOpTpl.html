@@ -1,0 +1,52 @@
+
+<table style="width: 100%" id="temporalCharOpValue">
+	<tbody>
+		<tr>
+			<td colspan="2">
+				<div style="margin-top: -57px">
+					<h6>&nbsp;&nbsp;All DS
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Selected
+						DS</h6>
+					<select class="multi" multiple style="width: 100%"
+						id="tempCharSource">
+						<option value="">None</option>
+					</select>
+				</div>
+			</td>
+			<td style="padding-left: 1%; padding-bottom: 5%">Date Time
+				Window for Characterization(seconds)<br /> <input type="text"
+				name="date_time_window" id="date_time_window" value="60" /> <br />
+
+				Select Characterization Operator<br /> <select
+				name="tc_char_operator" id="tc_char_operator">
+					<option value="Displacement">Displacement</option>
+					<option value="Velocity">Velocity</option>
+					<option value="Acceleration">Acceleration</option>
+					<option value="Periodicity">Periodicity</option>
+					<option value="Growth Rate">Growth Rate</option>
+			</select>
+
+			</td>
+
+		</tr>
+		<tr>
+			<td>
+				<button class="btn btn-small btn-inverse" style="margin-top: 15%"
+					id="tpcharQuery" name="tpchar"
+					onclick="queryGraphStart('tempChar','tempCharSource')">create
+					Query</button> <!--<input type="button" value="create Query" class="btn btn-small btn-inverse" style="margin-top:15%" id="tpcharQuery" name="tpchar" onclick="queryGraphStart('tempChar','tempCharSource')"/>-->
+			</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+<script type="text/javascript">
+   /*$(function() {	 
+		    
+		    $('.multiT').multiSelect({
+		    	 selectableHeader: 'All DS',
+				    selectionHeader: 'Selected DS'
+			});
+		    console.log("done woith multiT");
+		  });*/
+</script>

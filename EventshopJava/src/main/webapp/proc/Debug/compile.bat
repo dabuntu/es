@@ -1,0 +1,3 @@
+cd webapps\eventshoplinux\proc\Debug 
+g++ -IC:\Programs\OpenCV2.2-GCC\include -IC:\Programs\protobuf\include -IC:\Programs\OpenCV2.2-GCC\include\opencv -O0 -g3 -Wall -c -fmessage-length=0 -o src\.o ..\src\.cc 
+g++ -LC:\Programs\OpenCV2.2-GCC\build\lib -LC:\Programs\protobuf\src\.libs -LC:\Programs\protobuf\lib -o .exe src\temporalchar.o src\temporalPatternTemplate.o src\temporalPattern.o src\spatialchar.o src\spatialPattern.o src\op.o src\message.pb.o src\.o src\grouping.o src\filter.o src\emage.o src\aggregation.o -lopencv_core220.dll -lopencv_highgui220.dll -lprotobuf.dll -lprotoc.dll -lopencv_imgproc220.dll

@@ -1,0 +1,77 @@
+<div id="basic-modal-alert-content" title="Basic dialog">
+	<div id="AlertTabs" style="margin-bottom: 2%">
+		<ul style="background: #aad2fa">
+			<li><a href="#alertConfig">Alert Configuration<img src='imgs/filter.png' style="height: 32px; width: 32"></a></li>
+		</ul>
+		<form name="addAlertForm" id="addAlertForm"
+			enctype="multipart/form-data" action="#" method="POST">
+			<div id="alertConfig">
+				<div>
+					<table>
+						<tr>
+							<td colspan="2">
+								<input type="hidden" name="alertId" id="alertId" value="0" />
+							</td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Alert
+									Name</label></td>
+							<td><input type="text" name="alertName" id="alertName"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label>Alert Type</label></td>
+							<td><select id="alertType" name="alertType"
+								style="margin-left: 5%" onchange="getAlertTypeInfo(this.value)">
+									<option value="select">Select</option>
+									<option value="NoSoln">Only Alerts without Solution</option>
+									<option value="WithSoln">Alerts with Solution</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Alert
+									Theme</label></td>
+							<td><input type="text" name="alertTheme" id="alertTheme"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Alert
+									Source</label></td>
+							<td><input type="text" name="alertSrc" id="alertSrc"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Alert
+									Source Min</label></td>
+							<td><input type="number" name="alertSrcMin" id="alertSrcMin"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td><label><span style="color: red">* </span>Alert
+									Source Max</label></td>
+							<td><input type="number" name="alertSrcMax" id="alertSrcMax"
+								style="margin-left: 5%" /></td>
+						</tr>
+						<tr>
+							<td colspan="2"><input type="hidden" name="alertTypeBasedId"
+								id="alertTypeBasedId" value="0"> <input type="text"
+								name="alerttId" id="alerttId" value="0">
+								<div id="alertFormatData"></div></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<input type="button" value="Add" style="margin-top: 5%;"
+				id="addAlertBtn" /> <input type="button" value="Cancel"
+				style="margin-top: 5%;" id="addAlertCancel1" />
+
+			<script>
+
+				$('#addAlertCancel').click(function(){
+				disablePopup();  // function close pop up
+				});
+
+			</script>
+		</form>
+	</div>
+</div>

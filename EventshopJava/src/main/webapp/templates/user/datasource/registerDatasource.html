@@ -1,0 +1,87 @@
+<table class="table table-bordered sortable" id="datasourceTable">
+	<thead>
+		<tr>
+			<th>DSID</th>
+			<th>DS Name</th>
+			<th>Status</th>
+			<th><input type="checkbox" onClick="toggle(this)" /><br /></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% for (var i = 0; i < Data.length; i++) { %>
+
+		<tr>
+			<td><%=Data[i].srcID%></td>
+			<td><div style="width: 55px; word-wrap: break-word;">
+					<span id="<%=Data[i].srcID%>"
+						style="text-decoration: under-line; color: blue; cursor: pointer;"><%=Data[i].srcName%></span>
+				</div></td>
+			<td><%=Data[i].status%></td>
+
+			<td><% if(Data[i].control == 0) {%> <!--  <input type="checkbox" name="cboxDS[]" value="<%=Data[i].srcID%>" id="regds" > -->
+				<button class="start_ds btn btn-primary btn-small"
+					id="<%=Data[i].srcID%>">R</button> <% }else if(Data[i].control ==
+				1){ %> <!--  <a class="btn btn-small btn-inverse h16" href="#"><img
+					id="<%=Data[i].srcID%>" class="img_class_stop" name="<%=Data[i].srcID%>"
+					src="imgs/stop_32.png" />
+			</a> 
+			-->
+				<button class="stop_ds btn btn-success btn-small"
+					id="<%=Data[i].srcID%>">P</button>
+				<button class="view_ds btn btn-warning btn-small"
+					id="<%=Data[i].srcID%>">V</button> <!-- <img id="<%=Data[i].srcID%>" class="view_ds btn btn-small" src="imgs/view.png" /> -->
+				<% } else {%>
+
+				<button class="stop_ds btn btn-success btn-small"
+					id="<%=Data[i].srcID%>" disabled>P</button>
+				<button class="view_ds btn btn-warning btn-small"
+					id="<%=Data[i].srcID%>">V</button> <% } %>
+			</td>
+		</tr>
+
+		<% } %>
+
+		<div id="playDS" style="padding: 5px;">
+			<a class="btn btn-small btn-inverse h16" href="#"><img
+				id="ds_play" class="img_class" name="" src="imgs/play_32.png">
+			</a> <a class="btn btn-small btn-inverse h16" href="#"><img
+				id="ds_stop" name="" class="img_class_stop" src="imgs/stop_32.png"></a>
+		</div>
+	</tbody>
+
+</table>
+<input id="selectedDS" type="hidden" value="selected DS"></input>
+<script type="text/javascript">
+	//Pagination for DS
+	var pagerD = new Pager('datasourceTable', 5);
+	pagerD.init();
+	pagerD.showPageNav('pagerD', 'paginationD');
+	pagerD.showPage(1);
+	
+	$(document).on("click","#ds_play",function(){
+		$("#imageStatus").attr('src',"imgs/hourglass.png");
+		 //$("#uscon").slideDown();
+		
+		//mapDataLoader(this);
+	});
+	$(document).on("click","#ds_view",function(){
+		document.getElementsById("selectedDS").value = this.name;
+		console.log(document.getElementsById("selectedDS").value);
+		//$("#uscon").slideDown();
+		
+		//mapDataLoader(this);
+	});
+</script>
+
+
+
+<script type="text/javascript">
+function toggle(source) {
+  checkboxes = document.getElementsByName('cboxDS[]');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+
+
+</script>

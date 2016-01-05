@@ -1,0 +1,209 @@
+<style>
+#map {
+	width: 100%;
+	position: absolute;
+	height: 600px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid black;
+	border-radius: 8px;
+}
+</style>
+<div>
+	Data source ID: <span id="dsid"><%=dsID%></span>,
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Time: <span id="st"></span>,
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End Time: <span id="et"></span>,
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Min Value: <span id="min"></span>,
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Max Value: <span id="max"></span>
+	<div id="map"></div>
+	<div id="image"></div>
+</div>
+
+<script>
+	console.log("inside vizDS.html");
+	var width = 800,
+	height = 420, 
+	zoom = 10;
+	var cm = ", ";
+	var ds = document.getElementById("dsid").innerHTML;
+
+	
+function loaddata(){
+	console.log("inside vizDS.loaddata()");
+	ds = document.getElementById("dsid").innerHTML;
+	//alert(ds);
+	group.selectAll("rect").remove();
+ 	setFeature();
+}
+
+function project(point) {
+	var latlng = new L.LatLng(point[1], point[0]);
+	var layerPoint = map.latLngToLayerPoint(latlng);
+	return [layerPoint.x, layerPoint.y];
+}
+
+d3.select("div#map").attr("style", "width: "+width+"px; height: "+height+"px");
+
+var map = L.map('map').setView([40,-9], 5);	// lat,long
+//var map = L.map('map').setView([52.52,13.384], 13);
+	
+// Base Layers
+var toolserver = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png');
+var stamen = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {attribution: 'Add some attributes here!'});
+var openStreet = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+var baseLayers = {
+	"Stamen": stamen, 
+	"Toolserver-mapnik":toolserver,
+	"OpenStreetMap": openStreet
+};
+L.control.layers(baseLayers).addTo(map);
+  
+// adding a svgContainer to the overlay pane of the Leaflet-map 
+var svgContainer = d3.select(map.getPanes().overlayPane).append("svg").attr("width", width + 400).attr("height", height);
+var group= svgContainer.append("g").attr("class", "leaflet-zoom-hide")
+var pathh = d3.geo.path().projection(project);
+
+var overlays, emagee, feature, bounds;
+	
+setFeature();
+	
+function reset() {
+	
+	// set this bounds to match with map boundingbox (to fix the location of hide/show overlay)
+	bounds = [[map.getBounds()._southWest.lng, map.getBounds()._southWest.lat],[map.getBounds()._northEast.lng, map.getBounds()._northEast.lat]]
+    var bottomLeft = project(bounds[0]),
+    topRight = project(bounds[1]);
+ 
+    svgContainer.attr("width", topRight[0] - bottomLeft[0])
+         .attr("height", bottomLeft[1] - topRight[1])
+         .style("margin-left", bottomLeft[0] + "px")
+         .style("margin-top", topRight[1] + "px");
+ 	
+    group.attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
+ 	//alert("reset");
+ 	group.selectAll("rect").remove();
+ 	createEmage(emagee);
+ }
+
+map.on("viewreset", reset);
+map.on("drag", reset);
+
+function setFeature(){
+	//ds = document.getElementById("dsid").innerHTML;
+	//alert("vizDS " + ds);
+	console.log("inside vizDS.setFeature");
+	queue()
+	    	.defer(d3.json, "webresources/datasourceservice/dsemage/"+ds)
+	    	//.defer(d3.json, "temp/ds/"+ds+".json")
+	    	.await(ready);
+	function ready(error, emage) {
+		 document.getElementById("st").innerHTML = emage.startTimeStr;
+		 document.getElementById("et").innerHTML = emage.endTimeStr;
+		 document.getElementById("min").innerHTML = emage.min;
+		 document.getElementById("max").innerHTML = emage.max;
+		init(emage);
+	}
+}
+
+function convertArray2LalLongData(emage){
+	console.log("inside vizDS.convertArray2lalLongDAta");
+	var em = [];
+	for(var i = 0; i < emage.image.length; i++){
+		if(emage.image[i] != "NaN" 	){
+			var p = project(array2LongLat(emage, i));
+			latLongArr.push(p);
+			//console.log("lat-long: ["+i+"]" + p + ", " + emage.image[i]);
+			console.log("x = " + i/emage.col + "y = " + i%emage.col + "lat is " + p[0] + "long is " + p[1] + "value is " + emage.image[i]);
+			em.push({
+				x: i/emage.col,
+				y: i%emage.col,
+				lat: p[0],
+				lng: p[1],// - (i%emage.col)*zoom/2,
+				value: emage.image[i]
+			});
+		}
+	}
+	
+	return em;
+}
+var latLongArr = []
+function array2LongLat(emage, i){
+	console.log("inside vizDS.array2LongLat");
+	// note! in drawing rectangle the starting point x,y is at the topleft
+	var lat = (emage.row - (Math.floor(i/emage.col))) * emage.latUnit + emage.swLat;
+	var lng = emage.swLong + (Math.floor(i%emage.col))*emage.longUnit;
+	//console.log("i [lng, lat]" + i + " [" + lng + "," + lat + "]");
+	return [lng, lat];
+}
+
+
+function init(emage){
+	console.log("inside vizDS.init(emage)");
+	console.log(emage);
+	
+	emagee = emage;
+	var center = [emage.swLat + (emage.row/2)*emage.latUnit, emage.swLong + (emage.col/2)*emage.longUnit];
+	//map.setView([40,-9], 2);	// lat,long for map set here
+	console.log("center is " + center);
+	map.setView(center, 5);
+	
+	var data = null,
+		cells = null;
+	
+	/*
+	// show emage cell values on screen
+	var img = "";
+	for(var i = 0; i < emage.image.length; i++){
+		if(i % emage.col == 0)
+			img = img + "<br />" + emage.image[i];
+		else
+			img = img + ", " + emage.image[i];
+	}
+    d3.select("div#image")
+    	.html(img)
+    	.attr("style", "font-size:small;word-wrap: break-word;width: "+width+"px; height: "+height+"px");
+    */
+    // Craet E-mage map overlay
+	createEmage(emage);
+}
+
+function createEmage (emage){
+	console.log("inside vizDS.createEmage");
+	var	color = d3.interpolateRgb("#FFFFCC", "#FF0000");
+	
+	var emageData = convertArray2LalLongData(emage);
+	var emMin = emage.min, emMax = emage.max;
+	
+	var swp = project([emage.swLong, emage.swLat]);
+	var nep = project([emage.neLong, emage.neLat]);
+	var emageW = Math.abs(nep[0] - swp[0]);
+	var emageH = Math.abs(nep[1] - swp[1]);
+	
+	//console.log("createEmage emageW/H " + emageW + "," + emageH);
+
+    //console.log("createEmage emageData" + emageData[0].lat + cm + emageData[0].lng + cm + emageData[0].value);
+    var w = emageW/emage.col + 1;
+    var h = emageH/emage.row + 1;
+    var emDiff = emMax - emMin;
+    feature = group.selectAll("path")
+			.data(emageData)
+			.enter().append("svg:rect")
+				.attr("x", function(d) { return d.lat})
+				.attr("y", function(d) { return d.lng})
+				.attr("width", w)
+				.attr("height", h)
+				.attr("fill", function(d) { return color((d.value - emMin)/(emDiff))})
+				.attr("fill-opacity", 0.35)
+				//.attr("stroke", "#fff")
+				.attr("cell", function(d) { return "r" + d.x + "c" + d.y})
+		    .append("svg:title")
+			   .text(function(d) { return d.value; });
+    
+}
+setInterval('loaddata()', 60000);	// callling loaddata after 60sec
+	
+	</script>
+
+
+
+
