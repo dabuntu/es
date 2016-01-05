@@ -19,3 +19,13 @@ A Query Plan tree is constructed to perform the different operations on the emag
 
 ### Alert Framework
 Alert Framework is used to set up notify any abnormal conditions in the raw data or transformed data. Alerts can be created either on Query or Data Source and can be also be created to provide any solution if any.
+
+### DB setup
+
+Run the sql files in 
+
+https://github.com/dabuntu/es/blob/master/EventshopJava/src/main/resources/Sql/Eventshop/eventshop.sql
+
+and the sql files in the following folder in the same order
+
+https://github.com/dabuntu/es/tree/master/EventshopJava/src/main/resources/Sql
