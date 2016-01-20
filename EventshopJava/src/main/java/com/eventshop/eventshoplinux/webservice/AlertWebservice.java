@@ -58,13 +58,11 @@ public class AlertWebservice {
      * A object of alert type. It contains all the fields which exist in Alerts table. These information is needed to register an alert, however certain fields can  be left blank.
      * @return
      */
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/registerAlert")
     public String createAlert(Alert alert) {
-
         LOGGER.info("In Register alerts: " + alert);
         String message;
         String alertMessage = alert.getAlertMessage();
@@ -83,6 +81,8 @@ public class AlertWebservice {
         }
 
     }
+
+
 
     /**
      *
@@ -124,6 +124,7 @@ public class AlertWebservice {
         }
     }
 
+
     /**
      *
      * @param enableAlert
@@ -140,6 +141,7 @@ public class AlertWebservice {
         boolean result = alertDAO.activateAlert(enableAlert.getAlertID());
         return result;
     }
+
 
     /**
      *
@@ -158,6 +160,8 @@ public class AlertWebservice {
         return result;
     }
 
+
+
     /**
      *
      * @param str
@@ -168,8 +172,6 @@ public class AlertWebservice {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/resultAlert")
-
-
     public String resultAlert(String str) {
 
         LOGGER.info("Inside Result Alerts ");

@@ -1,9 +1,9 @@
 {
 
-        "Name": "AQI_CSV",
-        "Theme": "AQI",
-        "Url": "http://localhost:8085/eventshoplinux/ip.csv",
-        "Format": "file",
+        "Name": "Iphone",
+        "Theme": "Iphone",
+        "Url": "www.twitter.com",
+        "Format": "stream",
         "User_Id": 78,
         "Syntax" : "\"timestamp\":\"DATETIME\",\"theme\":\"STRING\",\"value\":\"NUMBER\",\"loc\":{\"lon\":\"NUMBER\",\"lat\":\"NUMBER\"}",
 
@@ -13,8 +13,7 @@
         "boundingbox": "32.249974,-123.969727,42.000325,-114.257813",
         "Sync_Time": 300000,
 
-        "Wrapper_Name": "csvField",
-        "Wrapper_Key_Value": "{\"datasource_type\":\"point\",\"spatial_wrapper\":\"sum\",\"lat_index\" :0,\"lon_index\":1,\"val_index\":2}",
-        "Bag_Of_Words":""
-
+        "Wrapper_Name": "twitter",
+        "Wrapper_Key_Value": "{\"datasource_type\":\"point\",\"spatial_wrapper\":\"count\"}",
+        "Bag_Of_Words":"#iphone6"
 }

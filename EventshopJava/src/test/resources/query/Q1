@@ -1,7 +1,7 @@
 {
 	"query_creator_id": 78,
-	"query_name":"Test",
-	"query_esql": "[{\"qID\":1,\"patternType\":\"filter\",\"dataSources\":[\"ds54\"],\"maskMethod\":\"\",\"coords\":[32.249974,-123.969727,42.000325,-114.257813],\"placename\":\"New York City\",\"filePath\":\"\",\"valRange\":[\"0\",\"232\"],\"timeRange\":[1,1],\"normMode\":\"true\",\"normVals\":[\"0\",\"100\"],\"queryName\":\"Test_Query\",\"timeWindow\":300,\"latitudeUnit\":\"0.2\",\"longitudeUnit\":\"0.2\",\"queryStatus\":\"S\",\"qryCreatorId\":\"78\",\"timeType\":\"0\",\"spatial_wrapper\":\"sum\",\"boundingBox\":\"32.249974,-123.969727,42.000325,-114.257813\"}]",
+	"query_name":"Test1",
+	"query_esql": "[{\"qID\":1,\"patternType\":\"filter\",\"dataSources\":[\"ds54\"],\"maskMethod\":\"\",\"coords\":[32.249974,-123.969727,42.000325,-114.257813],\"placename\":\"New York City\",\"filePath\":\"\",\"valRange\":[\"0\",\"232\"],\"timeRange\":[1,1],\"normMode\":\"true\",\"normVals\":[\"0\",\"100\"],\"queryName\":\"Test1\",\"timeWindow\":300000,\"latitudeUnit\":\"0.2\",\"longitudeUnit\":\"0.2\",\"queryStatus\":\"S\",\"qryCreatorId\":\"78\",\"timeType\":\"0\",\"spatial_wrapper\":\"sum\",\"boundingBox\":\"32.249974,-123.969727,42.000325,-114.257813\"}]",
 	"latitude_unit": 0.2,
 	"longitude_unit": 0.2,
 	"boundingbox": "32.249974,-123.969727,42.000325,-114.257813"

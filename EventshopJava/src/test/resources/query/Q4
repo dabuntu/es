@@ -1,0 +1,8 @@
+{
+	"query_creator_id": 78,
+	"query_name":"Test4",
+	"query_esql": "[{\"qID\":1,\"patternType\":\"filter\",\"dataSources\":[\"ds3\"],\"maskMethod\":\"\",\"coords\":[33.694638 , -118.410645,34.150454 , -117.861328],\"placename\":\"los angeles\",\"filePath\":\"\",\"valRange\":[\"0\",\"232\"],\"timeRange\":[1,1],\"normMode\":\"true\",\"normVals\":[\"0\",\"100\"],\"queryName\":\"Test4\",\"timeWindow\":300000,\"latitudeUnit\":\"0.2\",\"longitudeUnit\":\"0.2\",\"queryStatus\":\"S\",\"qryCreatorId\":\"78\",\"boundingBox\":\"32.249974,-123.969727,42.000325,-114.257813\"},{\"qID\":2,\"patternType\":\"filter\",\"dataSources\":[\"ds4\"],\"maskMethod\":\"\",\"coords\":[33.694638 , -118.410645,34.150454 , -117.861328],\"placename\":\"los angeles\",\"filePath\":\"\",\"valRange\":[\"-33\",\"3020\"],\"timeRange\":[1,1],\"normMode\":\"true\",\"normVals\":[\"0\",\"100\"],\"queryName\":\"Test4\",\"timeWindow\":300000,\"latitudeUnit\":\"0.2\",\"longitudeUnit\":\"0.2\",\"queryStatus\":\"S\",\"qryCreatorId\":\"78\",\"boundingBox\":\"32.249974,-123.969727,42.000325,-114.257813\"},{\"qID\":3,\"patternType\":\"aggregation\",\"dataSources\":[\"Q1\",\"Q2\"],\"values\":[],\"scalarFirst\":\"false\",\"aggOperator\":\"AggAvg\",\"valueNorm\":\"true\",\"normedRange\":[\"0\",\"100\"],\"queryName\":\"Test4\",\"timeWindow\":300000,\"latitudeUnit\":\"0.2\",\"longitudeUnit\":\"0.2\",\"queryStatus\":\"S\",\"qryCreatorId\":\"78\",\"boundingBox\":\"32.249974,-123.969727,42.000325,-114.257813\",\"timeRange\":[1,1]}]",
+	"latitude_unit": 0.2,
+	"longitude_unit": 0.2,
+	"boundingbox": "32.249974,-123.969727,42.000325,-114.257813"
+}

@@ -1,0 +1,18 @@
+{
+
+        "Name": "Weather",
+        "Theme": "OpenWeather",
+        "Url": "http://api.openweathermap.org/data/2.1/find/station",
+        "Format": "rest",
+        "User_Id": 78,
+        "Syntax" : "\"timestamp\":\"DATETIME\",\"theme\":\"STRING\",\"value\":\"NUMBER\",\"loc\":{\"lon\":\"NUMBER\",\"lat\":\"NUMBER\"}",
+
+        "Time_Window": 300000,
+        "Latitude_Unit": 0.2,
+        "Longitude_Unit": 0.2,
+        "boundingbox": "32.249974,-123.969727,42.000325,-114.257813",
+        "Sync_Time": 300000,
+
+        "Wrapper_Name": "json",
+        "Wrapper_Key_Value": "{\"datasource_type\": \"point\",\"spatial_wrapper\": \"sum\",\"isList\": true,\"rootElement\": \"\",\"tokenizeElement\": \"list\",\"lat_path\": \"coord.lat\",\"lon_path\": \"coord.lon\",\"val_path\": \"wind.speed\",\"date_time_path\": \"dt\",\"date_time_format\": \"Long\",\"queryParams\": [{\"lat\": \"38.903858\",\"lon\": \"-105.644531\",\"radius\": \"40\"}]}"
+}

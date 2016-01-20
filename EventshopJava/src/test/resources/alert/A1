@@ -1,0 +1,19 @@
+{
+    "alertName" : "Alert1",
+    "alertType" : 1,
+    "theme" : "test",
+    "alertSource" : "ds3",
+    "safeSource" : "ds4",
+    "alertMessage" : "PM2.5 content high in {$coordinate} in {$geoAddress} because of high traffic.",
+    "alertMin" : 80,
+    "alertMax" : 100,
+    "safeMin" : 20,
+    "safeMax" : 60,
+    "alertStatus" : 0,
+    "user_id" : 78,
+    "email" : "abhisek@abc.com",
+    "resultEndpoint" : "http://localhost:8085/eventshoplinux/rest/alertwebservice/resultAlert/",
+    "lat" : "55.00000",
+    "lng" : "66.00000",
+    "radius" : "6.00000"
+}

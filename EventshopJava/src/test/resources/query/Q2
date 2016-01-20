@@ -1,0 +1,8 @@
+{
+	"query_creator_id": 78,
+	"query_name":"Test2",
+	"query_esql": "[{\"qID\":1,\"patternType\":\"grouping\",\"dataSources\":[\"ds3\"],\"method\":\"Threshold\",\"numGroup\":\"\",\"thresholds\":[\"30\",\"70\"],\"split\":\"False\",\"doColoring\":\"True\",\"colorCodes\":[\"green\",\" yellow\",\" red\"],\"queryName\":\"Test2\",\"timeWindow\":300000,\"latitudeUnit\":\"0.2\",\"longitudeUnit\":\"0.2\",\"queryStatus\":\"S\",\"qryCreatorId\":\"78\",\"boundingBox\":\"32.249974,-123.969727,42.000325,-114.257813\",\"timeRange\":[1,1]}]",
+	"latitude_unit": 0.2,
+	"longitude_unit": 0.2,
+	"boundingbox": "32.249974,-123.969727,42.000325,-114.257813"
+}

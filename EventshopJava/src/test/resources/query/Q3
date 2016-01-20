@@ -1,0 +1,8 @@
+{
+	"query_creator_id": 78,
+	"query_name":"Test3",
+	"query_esql": "[{\"qID\":1,\"patternType\":\"tpchar\",\"dataSources\":[\"ds3\"],\"tcTimeWindow\":\"65\",\"tmplCharOperator\":\"Displacement\",\"queryName\":\"Test3\",\"timeWindow\":300000,\"latitudeUnit\":2,\"longitudeUnit\":2,\"queryStatus\":\"S\",\"qryCreatorId\":\"78\",\"boundingBox\":\"32.249974,-123.969727,42.000325,-114.257813\",\"timeRange\":[1,1]}]",
+	"latitude_unit": 2,
+	"longitude_unit": 2,
+	"boundingbox": "32.249974,-123.969727,42.000325,-114.257813"
+}

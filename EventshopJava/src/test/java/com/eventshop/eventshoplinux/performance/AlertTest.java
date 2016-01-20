@@ -1,5 +1,6 @@
 package com.eventshop.eventshoplinux.performance;
 
+import com.eventshop.eventshoplinux.model.Alert;
 import com.eventshop.eventshoplinux.model.DataSource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -21,20 +22,20 @@ import java.util.Properties;
 import java.util.Scanner;
 
 /**
- * Created by nandhiniv on 8/4/15.
+ * Created by Abhisek on 8/4/15.
  */
-public class DataSourceTest extends CamelTestSupport {
+public class AlertTest extends CamelTestSupport {
 
     ClassLoader classLoader = getClass().getClassLoader();
     Properties properties = new Properties();
-    List<Integer> createdDSIDs = new ArrayList<>();
+    List<Integer> createdAlertIDs = new ArrayList<>();
     ObjectMapper objectMapper = new ObjectMapper();
-    Logger LOGGER = LoggerFactory.getLogger(DataSourceTest.class);
+    Logger LOGGER = LoggerFactory.getLogger(AlertTest.class);
 
 
     String host;
     String port;
-    String createDSPath, enableDSPath, disableDSPath, deleteDSPath;
+    String createAlertPath, enableAlertPath, disableAlertPath, deleteAlertPath;
 
     @Override
     public void setUp() throws Exception {
@@ -46,34 +47,34 @@ public class DataSourceTest extends CamelTestSupport {
 
         host = properties.getProperty("host");
         port = properties.getProperty("port");
-        createDSPath = "http://" + host + ":" + port + "/eventshoplinux/rest/dataSourceService/createDataSource";
-        enableDSPath = "http://" + host + ":" + port + "/eventshoplinux/rest/dataSourceService/enableDataSource";
-        disableDSPath = "http://" + host + ":" + port + "/eventshoplinux/rest/dataSourceService/disableDataSource";
-        deleteDSPath = "http://" + host + ":" + port + "/eventshoplinux/rest/dataSourceService/deleteDataSource";
+        createAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/registerAlert";
+        enableAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/enableAlert";
+        disableAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/disableAlert";
+        deleteAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/deleteAlert";
     }
 
     @Override
     public void tearDown() throws Exception {
         LOGGER.info("In tear down");
-        cleanUpDatasource();
+        cleanUpAlert();
         super.tearDown();
 
     }
 
     @Test
-    public void testCreateDataSource() throws Exception {
+    public void testCreateAlert() throws Exception {
 
         //Add Rest post route
 
         final CamelContext camelContext = new DefaultCamelContext();
-        camelContext.addRoutes(new CreateDataSource());
+        camelContext.addRoutes(new CreateAlert());
         camelContext.setTracing(true);
         camelContext.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 try {
-                    cleanUpDatasource();
+                    cleanUpAlert();
                     camelContext.stop();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -118,67 +119,67 @@ public class DataSourceTest extends CamelTestSupport {
         return s;
     }
 
-    public void cleanUpDatasource() throws Exception {
-        for (int dsID : createdDSIDs) {
-            DataSource dataSource = new DataSource();
-            dataSource.setID(dsID);
-            String content = objectMapper.writeValueAsString(dataSource);
-            makePostRestCall(disableDSPath, content, "POST");
-            makePostRestCall(deleteDSPath, content, "DELETE");
+    public void cleanUpAlert() throws Exception {
+        for (int aID : createdAlertIDs) {
+            Alert alert = new Alert();
+            alert.setaID(aID);
+            String content = objectMapper.writeValueAsString(alert);
+            makePostRestCall(disableAlertPath, content, "POST");
+            makePostRestCall(deleteAlertPath, content, "DELETE");
         }
     }
 
     // Route to create Datasource using POST
-    private class CreateDataSource extends RouteBuilder {
+    private class CreateAlert extends RouteBuilder {
 
         @Override
         public void configure() throws Exception {
 
-            from("timer://createDS?fixedRate=true&period=" + properties.get("dsCreationTimeInterval"))
+            from("timer://createAlert?fixedRate=true&period=" + properties.get("alertCreationTimeInterval"))
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange) throws Exception {
                             System.out.println("Inside route");
                         }
                     })
-                    .to("direct:createDatasource")
+                    .to("direct:createAlert")
             ;
 
-            from("direct:createDatasource")
+            from("direct:createAlert")
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange) throws Exception {
 
-                            List<Integer> currentDSIDs = new ArrayList<Integer>();
-                            File dir = new File(classLoader.getResource("datasource/").getFile());
+                            List<Integer> currentAlertIDs = new ArrayList<Integer>();
+                            File dir = new File(classLoader.getResource("alert/").getFile());
                             File[] fList = dir.listFiles();
                             String content = "";
                             for (File file : fList) {
                                 if (file.isFile()) {
                                     content = new Scanner(file).useDelimiter("\\Z").next();
-                                    String result = makePostRestCall(createDSPath, content, "POST");
+                                    String result = makePostRestCall(createAlertPath, content, "POST");
 
                                     //Add the created ID output from the server to the list of created IDs
-                                    createdDSIDs.add(Integer.parseInt(result));
-                                    currentDSIDs.add(Integer.parseInt(result));
+                                    createdAlertIDs.add(Integer.parseInt(result));
+                                    currentAlertIDs.add(Integer.parseInt(result));
                                 }
                             }
 
-                            exchange.getOut().setBody(currentDSIDs);
+                            exchange.getOut().setBody(currentAlertIDs);
 
                         }
                     })
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange) throws Exception {
-                            List<Integer> currentDSIDs = exchange.getIn().getBody(ArrayList.class);
-                            for (Integer dsID : currentDSIDs) {
+                            List<Integer> currentAlertIDs = exchange.getIn().getBody(ArrayList.class);
+                            for (Integer aID : currentAlertIDs) {
                                 //Enable the current DSIDs
-                                DataSource dataSource = new DataSource();
-                                dataSource.setID(dsID);
+                                Alert alert = new Alert();
+                                alert.setaID(aID);
 
-                                String content = objectMapper.writeValueAsString(dataSource);
-                                String result = makePostRestCall(enableDSPath, content, "POST");
+                                String content = objectMapper.writeValueAsString(alert);
+                                String result = makePostRestCall(enableAlertPath, content, "POST");
                             }
                         }
                     })

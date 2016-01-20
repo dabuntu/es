@@ -1,0 +1,18 @@
+{
+
+        "Name": "XMLtest",
+        "Theme": "XMLtest",
+        "Url": "http://uk-air.defra.gov.uk/assets/rss/current_site_levels.xml",
+        "Format": "rest",
+        "User_Id": 78,
+        "Syntax" : "\"timestamp\":\"DATETIME\",\"theme\":\"STRING\",\"value\":\"NUMBER\",\"loc\":{\"lon\":\"NUMBER\",\"lat\":\"NUMBER\"}",
+
+        "Time_Window": 300000,
+        "Latitude_Unit": 0.2,
+        "Longitude_Unit": 0.2,
+        "boundingbox": "32.249974,-123.969727,42.000325,-114.257813",
+        "Sync_Time": 300000,
+
+        "Wrapper_Name": "xml",
+        "Wrapper_Key_Value": "{\"datasource_type\":\"point\", \"spatial_wrapper\":\"sum\", \"isList\":true, \"rootElement\": \"rss/channel\", \"tokenizeElement\": \"item\", \"loc_lat_path\" :\"/item/description/text()\", \"loc_lat_grok\":\": %{NUMBER:loc_lat}&deg;%{GREEDYDATA:waste1}%{NUMBER:loc_lon}&quot;N%{GREEDYDATA:waste2}%{WORD:status} at index %{NUMBER:index}\",\"loc_lon_path\":\"/item/description/text()\", \"loc_lon_grok\":\": %{NUMBER:loc_lat}&deg;%{GREEDYDATA:waste1}%{NUMBER:loc_lon}&quot;N%{GREEDYDATA:waste2}%{WORD:status} at index %{NUMBER:index}\",\"value_path\":\"/item/description/text()\",\"value_grok\":\": %{NUMBER:lat}&deg;%{GREEDYDATA:waste1}%{NUMBER:lon}&quot;N%{GREEDYDATA:waste2}%{WORD:status} at index %{NUMBER:value}\",\"timestamp_path\":\"/item/pubDate/text()\", \"timestamp_format\":\"dd MMM yyyy hh:mm:ss\", \"timestamp_grok\":\"%{WORD:garbage}, %{GREEDYDATA:timestamp} +%{NUMBER:garbage1}\"}"
+}
