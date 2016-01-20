@@ -1,0 +1,13 @@
+ {
+      "source": "ds30",
+             "rules": [
+                      {
+                           "dataField": "location",
+                           "ruleOperator": "coordinates",
+                            "ruleParameters": "7.45,69.25,32.6,92.0"
+                      }
+             ],
+             "extractFields": "location.lat,location.lon,value,"
+}
+
+

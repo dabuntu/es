@@ -1,0 +1,11 @@
+ {
+      "source": "ds30",
+             "rules": [
+                      {
+                           "dataField": "value",
+                           "ruleOperator": ">",
+                            "ruleParameters": "50"
+                      }
+             ],
+             "extractFields": "location.lat,location.lon,value,"
+}

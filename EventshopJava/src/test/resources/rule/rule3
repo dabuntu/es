@@ -1,0 +1,11 @@
+ {
+      "source": "ds30",
+             "rules": [
+                      {
+                           "dataField": "theme",
+                           "ruleOperator": "equals",
+                            "ruleParameters": "Krumbs_SB_Test"
+                      }
+             ],
+             "extractFields": "location.lat,location.lon,value,"
+}
