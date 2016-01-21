@@ -1,6 +1,5 @@
-package com.eventshop.eventshoplinux.performance;
+package com.eventshop.eventshoplinux.test;
 
-import com.eventshop.eventshoplinux.camel.XmlRoute;
 import com.eventshop.eventshoplinux.model.DataSource;
 import com.eventshop.eventshoplinux.model.Query;
 import org.apache.camel.CamelContext;

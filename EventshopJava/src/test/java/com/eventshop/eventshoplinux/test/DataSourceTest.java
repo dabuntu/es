@@ -1,4 +1,4 @@
-package com.eventshop.eventshoplinux.performance;
+package com.eventshop.eventshoplinux.test;
 
 import com.eventshop.eventshoplinux.model.DataSource;
 import org.apache.camel.CamelContext;

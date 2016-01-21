@@ -1,7 +1,6 @@
-package com.eventshop.eventshoplinux.performance;
+package com.eventshop.eventshoplinux.test;
 
-import com.eventshop.eventshoplinux.model.Alert;
-import com.eventshop.eventshoplinux.model.DataSource;
+import com.eventshop.eventshoplinux.ruleEngine.Rule;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -22,20 +21,21 @@ import java.util.Properties;
 import java.util.Scanner;
 
 /**
- * Created by Abhisek on 8/4/15.
+ * Created by aravindh on 1/14/16.
  */
-public class AlertTest extends CamelTestSupport {
+
+public class RuleTest extends CamelTestSupport {
 
     ClassLoader classLoader = getClass().getClassLoader();
     Properties properties = new Properties();
-    List<Integer> createdAlertIDs = new ArrayList<>();
+    List<Integer> createdRuleIDs = new ArrayList<>();
     ObjectMapper objectMapper = new ObjectMapper();
-    Logger LOGGER = LoggerFactory.getLogger(AlertTest.class);
+    Logger LOGGER = LoggerFactory.getLogger(RuleTest.class);
 
 
     String host;
     String port;
-    String createAlertPath, enableAlertPath, disableAlertPath, deleteAlertPath;
+    String createRulePath, enableRulePath;
 
     @Override
     public void setUp() throws Exception {
@@ -47,34 +47,34 @@ public class AlertTest extends CamelTestSupport {
 
         host = properties.getProperty("host");
         port = properties.getProperty("port");
-        createAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/registerAlert";
-        enableAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/enableAlert";
-        disableAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/disableAlert";
-        deleteAlertPath = "http://" + host + ":" + port + "/eventshoplinux/rest/alertwebservice/deleteAlert";
+        createRulePath = "http://" + host + ":" + port + "/eventshoplinux/rest/rulewebservice/rule";
+        enableRulePath = "http://" + host + ":" + port + "/eventshoplinux/rest/rulewebservice/enableRule";
+        //  disableRulePath = "http://" + host + ":" + port + "/eventshoplinux/rest/rulewebservice/disableDataSource";
+        //  deleteRulePath = "http://" + host + ":" + port + "/eventshoplinux/rest/rulewebservice/deleteDataSource";
     }
 
     @Override
     public void tearDown() throws Exception {
         LOGGER.info("In tear down");
-        cleanUpAlert();
+        //   cleanUpDatasource();
         super.tearDown();
 
     }
 
     @Test
-    public void testCreateAlert() throws Exception {
+    public void testCreateRule() throws Exception {
 
         //Add Rest post route
 
         final CamelContext camelContext = new DefaultCamelContext();
-        camelContext.addRoutes(new CreateAlert());
+        camelContext.addRoutes(new CreateRule());
         camelContext.setTracing(true);
         camelContext.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 try {
-                    cleanUpAlert();
+                    //      cleanUpDatasource();
                     camelContext.stop();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -97,7 +97,7 @@ public class AlertTest extends CamelTestSupport {
     }
 
     public String makePostRestCall(String path, String content, String method) throws Exception {
-        LOGGER.info("Making REST call to {}. Content is {}", path, content);
+        System.out.println("Making REST call to "+path+" Content is "+ content);
         HttpURLConnection conn = (HttpURLConnection) new URL(path).openConnection();
         conn.setDoOutput(true);
         conn.setRequestMethod(method);
@@ -113,73 +113,74 @@ public class AlertTest extends CamelTestSupport {
         while ((output = br.readLine()) != null) {
             s += output;
         }
-        LOGGER.info("HTTP Response code from server is {}", conn.getResponseCode());
-        LOGGER.info("Response from server is {}", s);
+        System.out.println("HTTP Response code from server is "+ conn.getResponseCode());
+        System.out.println("Response from server is "+ s);
         conn.disconnect();
         return s;
     }
 
-    public void cleanUpAlert() throws Exception {
-        for (int aID : createdAlertIDs) {
-            Alert alert = new Alert();
-            alert.setaID(aID);
-            String content = objectMapper.writeValueAsString(alert);
-            makePostRestCall(disableAlertPath, content, "POST");
-            makePostRestCall(deleteAlertPath, content, "DELETE");
-        }
-    }
+//    public void cleanUpDatasource() throws Exception {
+//        for (int ruleID : createdRuleIDs) {
+//            DataSource dataSource = new DataSource();
+//            dataSource.setID(ruleID);
+//            String content = objectMapper.writeValueAsString(dataSource);
+//            makePostRestCall(disableRulePath, content, "POST");
+//            makePostRestCall(deleteRulePath, content, "DELETE");
+//        }
+//    }
 
-    // Route to create Datasource using POST
-    private class CreateAlert extends RouteBuilder {
+    private class CreateRule extends RouteBuilder {
 
         @Override
         public void configure() throws Exception {
 
-            from("timer://createAlert?fixedRate=true&period=" + properties.get("alertCreationTimeInterval"))
+            from("timer://createRule?fixedRate=true&period=" + properties.get("ruleCreationTimeInterval"))
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange) throws Exception {
                             System.out.println("Inside route");
                         }
                     })
-                    .to("direct:createAlert")
+                    .to("direct:createRule")
             ;
 
-            from("direct:createAlert")
+            from("direct:createRule")
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange) throws Exception {
-
-                            List<Integer> currentAlertIDs = new ArrayList<Integer>();
-                            File dir = new File(classLoader.getResource("alert/").getFile());
+                            System.out.println("Insert create Rule");
+                            List<Integer> currentRuleIDs = new ArrayList<Integer>();
+                            File dir = new File(classLoader.getResource("rule/").getFile());
                             File[] fList = dir.listFiles();
                             String content = "";
                             for (File file : fList) {
+                                System.out.println("Inside for loop"+file.getName());
                                 if (file.isFile()) {
+                                    System.out.println("Inside If");
                                     content = new Scanner(file).useDelimiter("\\Z").next();
-                                    String result = makePostRestCall(createAlertPath, content, "POST");
-
+                                    String result = makePostRestCall(createRulePath, content, "POST");
+                                    String enabled = makePostRestCall(enableRulePath, content, "POST");
                                     //Add the created ID output from the server to the list of created IDs
-                                    createdAlertIDs.add(Integer.parseInt(result));
-                                    currentAlertIDs.add(Integer.parseInt(result));
+                                    createdRuleIDs.add(Integer.parseInt(result));
+                                    currentRuleIDs.add(Integer.parseInt(result));
                                 }
                             }
 
-                            exchange.getOut().setBody(currentAlertIDs);
+                            exchange.getOut().setBody(currentRuleIDs);
 
                         }
                     })
                     .process(new Processor() {
                         @Override
                         public void process(Exchange exchange) throws Exception {
-                            List<Integer> currentAlertIDs = exchange.getIn().getBody(ArrayList.class);
-                            for (Integer aID : currentAlertIDs) {
+                            List<Integer> currentRuleIDs = exchange.getIn().getBody(ArrayList.class);
+                            for (Integer ruleID : currentRuleIDs) {
                                 //Enable the current DSIDs
-                                Alert alert = new Alert();
-                                alert.setaID(aID);
+                                Rule rule = new Rule();
+                                rule.setRuleID(ruleID.toString());
 
-                                String content = objectMapper.writeValueAsString(alert);
-                                String result = makePostRestCall(enableAlertPath, content, "POST");
+                                String content = objectMapper.writeValueAsString(rule);
+//                                String result = makePostRestCall(enableDSPath, content, "POST");
                             }
                         }
                     })
