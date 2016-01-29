@@ -1024,9 +1024,17 @@ var mask = $('#maskMethodVal option:selected').val();
     		alert("Please Enter The Time Window in Sec");
     		return false;
     	}
+    	if($('#dsTime').val()<300){
+            	    alert("Time Window should be greater than 299");
+            	    return false;
+            	}
     	if(!(/^[0-9]+$/.test($('#dsSync').val())) && ($('#dsSync').val()!="")){
     		alert("Please Enter The Synchronize at nth Sec");
     		return false;
+    	}
+    	if($('#dsSync').val()<300){
+    	    alert("Sync time should be greater than 299");
+    	    return false;
     	}
     	if(!(/^[-+]?[0-9]+[\.[0-9]+]?$/.test($('#dsUnitLat').val()))  && ($('#dsUnitLat').val()!="")){ // can be -ve and decimal --sanjukta 
     		alert("Please Enter The Unit of Latitude");

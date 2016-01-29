@@ -107,13 +107,34 @@ public class QueryDao extends BaseDAO {
             deleted = ps.executeUpdate();
 
             if (deleted != 0)
-                return "DataSource deleted succefully";
+                return "Query deleted successfully";
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return "Exception in deleting Datasource";
+        return "Exception in deleting Query";
+    }
+
+    public List<Integer> getEnabledQueryIds() {
+
+        try {
+            List<Integer> enabledQIds = null;
+            PreparedStatement ps = con.prepareStatement("SELECT query_id FROM Query_Master WHERE query_status = 1");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+
+                if (!rs.getString("query_id").isEmpty()) {
+                    System.out.println(rs.getInt("query_id"));
+                    enabledQIds.add(rs.getInt("query_id"));
+                }
+            }
+            return enabledQIds;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public Emage getQueryEmage(int Qid) {
@@ -142,4 +163,5 @@ public class QueryDao extends BaseDAO {
         }
         return null;
     }
+
 }
