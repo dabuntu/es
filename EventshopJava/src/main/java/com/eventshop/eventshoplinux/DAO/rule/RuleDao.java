@@ -227,13 +227,13 @@ public class RuleDao extends BaseDAO {
 
     public List<RuleOperator> getAllEnabledRuleOperators() {
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+//        PreparedStatement ps = null;
+//        ResultSet rs = null;
 
         List<RuleOperator> ruleOperatorList = new ArrayList<>();
         try {
-            ps = con.prepareStatement(SELECT_ENABLED_RULE_OPERATOR_QRY);
-            rs = ps.executeQuery();
+            PreparedStatement ps = con.prepareStatement(SELECT_ENABLED_RULE_OPERATOR_QRY);
+            ResultSet rs = ps.executeQuery();
 
 
             while (rs.next()) {

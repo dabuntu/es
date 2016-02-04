@@ -349,7 +349,7 @@ public class KafkaToMongoRoute extends RouteBuilder {
                                      LOGGER.debug("Result List ****** : " + result);
                                  }
                                  System.out.println("1.Before Grok...");
-                                 Grok grok = Grok.create("patterns");
+                                 Grok grok = Grok.create("src/main/resources/patterns");
                                  System.out.println("2.After Grok...");
                                  final Configuration configuration = Configuration.builder()
                                          .jsonProvider(new JacksonJsonNodeJsonProvider())
