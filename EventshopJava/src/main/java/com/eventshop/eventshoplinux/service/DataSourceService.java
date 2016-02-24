@@ -54,8 +54,10 @@ public class DataSourceService {
 //		System.out.println("stat is " + stat);
 
 
-		RuleDao rd = new RuleDao();
-		rd.registerDefaultRule(source);
+		if(source.getSrcID() == null || source.getSrcID() == "" || source.getSrcID().equals("0") ) {
+			RuleDao rd = new RuleDao();
+			rd.registerDefaultRule(source);
+		}
 
 		return result;
 
