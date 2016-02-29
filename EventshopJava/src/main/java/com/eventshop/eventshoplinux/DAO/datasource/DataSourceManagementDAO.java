@@ -74,13 +74,14 @@ public class DataSourceManagementDAO extends BaseDAO {
 			ps.setString(2, ds.getSrcTheme());
 			ps.setString(3, ds.getUrl());
 			ps.setString(4, ds.getSrcFormat().toString());
-			if (updtFlg == 0) {
-				ps.setInt(5, Integer.parseInt(ds.getUserId()));
-			} else {
-				ps.setLong(5, Long.parseLong(ds.getSrcID()));
-			}
+
 			//6,7 are time
-			ps.setString(6, ds.getSyntax());
+			ps.setString(5, ds.getSyntax());
+			if (updtFlg == 0) {
+				ps.setInt(6, Integer.parseInt(ds.getUserId()));
+			} else {
+				ps.setLong(6, Long.parseLong(ds.getSrcID()));
+			}
 
 			inserted = ps.executeUpdate(); // run the query
 			if (inserted != 0 && updtFlg == 0) {

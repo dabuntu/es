@@ -114,7 +114,7 @@ public class Constant {
 	public static final String INITIAL_RESOLUTION = "initial";
 	public static final String FINAL_RESOLUTION = "final";
 	public static final String INSERT_DSMSTR_QRY = "INSERT INTO Datasource_Master(dsmaster_title,dsmaster_theme,dsmaster_url,dsmaster_format,"
-			+ "dsmaster_creator,dsmaster_created_date,dsmaster_updated_date,dsmaster_syntax) values(?,?,?,?,?,now(),now(),?)";
+			+ "dsmaster_syntax,dsmaster_created_date,dsmaster_updated_date,dsmaster_creator) values(?,?,?,?,?,now(),now(),?)";
 	public static final String EMPTY_STRING = "";
 	public static final String SELECT_LST_INSID = "SELECT LAST_INSERT_ID()";
 	public static final String UPDATE_DSMSTR_QRY = "UPDATE Datasource_Master SET dsmaster_title=?, dsmaster_theme=?, dsmaster_url=?, "
