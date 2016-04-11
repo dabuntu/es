@@ -221,7 +221,12 @@ public class EmageRoute extends RouteBuilder{
                                  for(Emage emg : emageList){
                                      ObjectMapper mapper = new ObjectMapper();
                                      if (emageLayerCnt == 0) {
-                                         mapper.writeValue(new File(Config.getProperty("datasourceJsonLoc") + exchange.getIn().getHeader("dsID") + ".json"), emg);
+                                         String dsIDFilename = exchange.getIn().getHeader("dsID") + ".json";
+                                         File file = new File(dsIDFilename);
+                                         if(!file.exists()) {
+                                             file.createNewFile();
+                                         }
+                                         mapper.writeValue(new File(Config.getProperty("datasourceJsonLoc") + dsIDFilename), emg);
                                      } else {
                                          mapper.writeValue(new File(Config.getProperty("datasourceJsonLoc") + exchange.getIn().getHeader("dsID") + "_layer" + emageLayerCnt + ".json"), emg);
                                      }
@@ -241,6 +246,8 @@ public class EmageRoute extends RouteBuilder{
                 .choice()
                 .when(header("zoomFactor").isGreaterThan(1))
                 .to("direct:multiEmage")
+                .multicast().to("direct:searchAndRunQuery", "direct:runAlertForDS")
+
 //                .choice()
 //                .when(header("createEmageFile").isNotEqualTo(false))
 //                .to("direct:emageJson")
@@ -345,25 +352,27 @@ public class EmageRoute extends RouteBuilder{
 //                            }
 //                        });
 
-                from("direct:emageJson")
-                    .marshal().json(JsonLibrary.Jackson)
-                    .process(new Processor() {
-                        @Override
-                        public void process(Exchange exchange) throws Exception {
-                           LOGGER.info("Writing JSON!!!!");
-                            exchange.getOut().setBody(exchange.getIn().getBody(String.class));
-                            exchange.getOut().setHeader("CamelFileName", exchange.getIn().getHeader("dsID") + ".json");
-                            exchange.getOut().setHeader("dsID", exchange.getIn().getHeader("dsID"));
-                           LOGGER.info("Done...");
-                        }
-                    })
-                        .to("file:" + Config.getProperty("datasourceJsonLoc") + "?noop=true&charset=iso-8859-1")
-                        .process(new Processor() {
-                            @Override
-                            public void process(Exchange exchange) throws Exception {
-                                exchange.getOut().setHeader("dsID", exchange.getIn().getHeader("dsID"));
+        from("direct:emageJson")
+                .marshal().json(JsonLibrary.Jackson)
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        LOGGER.info("Writing JSON!!!!");
+                        exchange.getOut().setBody(exchange.getIn().getBody(String.class));
+                        exchange.getOut().setHeader("CamelFileName", exchange.getIn().getHeader("dsID") + ".json");
+                        exchange.getOut().setHeader("dsID", exchange.getIn().getHeader("dsID"));
+                        LOGGER.info("Done...");
+                    }
+                })
+                .to("file:" + Config.getProperty("datasourceJsonLoc") + "?noop=true&charset=iso-8859-1")
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        exchange.getOut().setHeader("dsID", exchange.getIn().getHeader("dsID"));
                             }
                         })
+//                        .to("direct:searchAndRunQuery")
+//                        .to("direct:runAlertForDS")
                         .multicast().to("direct:searchAndRunQuery", "direct:runAlertForDS")
                 ;
 

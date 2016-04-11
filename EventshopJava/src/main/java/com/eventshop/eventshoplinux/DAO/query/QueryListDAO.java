@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class QueryListDAO extends BaseDAO {
 	private final static Logger LOGGER = LoggerFactory.getLogger(QueryListDAO.class);
 
 	/*
-	 * This method returns the queryList based on user logged in
-	 */
+     * This method returns the queryList based on user logged in
+     */
 	public List<Query> getUserQuery(User user) {
 		log.info("Inside getUserQuery()");
 		List<Query> qryList = new ArrayList<Query>();
@@ -75,9 +76,9 @@ public class QueryListDAO extends BaseDAO {
 		return qryList;
 	}
 
-	/*
-	 * This method will check Query Object existance
-	 */
+   /*
+    * This method will check Query Object existance
+    */
 
 	public boolean chkQryID(int qID) {
 		PreparedStatement ps = null;
@@ -98,11 +99,14 @@ public class QueryListDAO extends BaseDAO {
 	}
 
 	/*
-	 * This method insert the Query Object to Query_Master table for queryRun
-	 */
+     * This method insert the Query Object to Query_Master table for queryRun
+     */
 	public int registerQuery(QueryDTO qryDTO, String selectedQueryRun,
 							 int noSubQueries) {
+		System.out.println("Query Registration.....");
 		PreparedStatement ps = null;
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
 		int lastQryId = 0;
 		selectedQueryRun = selectedQueryRun.trim();
 		JsonParser jsonParser = new JsonParser();
@@ -117,9 +121,21 @@ public class QueryListDAO extends BaseDAO {
 				if (sources != null) {
 					for (int j = 0; j < sources.size(); j++) {
 						String source = sources.get(j).getAsString();
-						if (source.toLowerCase().startsWith("ds")) {
-							if(!dataSourceList.contains(source.toLowerCase())) {
-								dataSourceList.add(source.toLowerCase());
+						System.out.println("source:"+source);
+						if (source.toLowerCase().startsWith("rule")) {
+							String ruleid=source.substring(4,source.length());
+							System.out.println("ruleid:"+ruleid);
+							try {
+								ps1= con.prepareStatement("select source_id from RuleQueryMaster where RuleID="+ruleid);
+								rs1 = ps1.executeQuery();
+
+								while (rs1.next()) {
+									System.out.println(rs1.getString(1));
+									dataSourceList.add(rs1.getString(1));
+								}
+
+							} catch (SQLException e) {
+								e.printStackTrace();
 							}
 						}
 					}
@@ -150,46 +166,46 @@ public class QueryListDAO extends BaseDAO {
 			ps.setString(9, qryDTO.getTimeType());
 			ps.setString(10, dataSourceList.toString());
 
-			/*
-			 * //child if (firstInsrtedQryId != 0) { ps =
-			 * connection.prepareStatement(INST_QRYMSTR_QRY);
-			 * 
-			 * ps.setString(1, selectedQueryRun.trim()); // esql ps.setInt(2,
-			 * (qryDTO.getTimeWindow() == null ||
-			 * qryDTO.getTimeWindow().equals("")
-			 * ?0:Integer.parseInt(qryDTO.getTimeWindow()))); //
-			 * hardcoded--Integer.parseInt(qryDTO.getTimeWindow())
-			 * ps.setDouble(3, qryDTO.getLatitudeUnit()); // hardcoded
-			 * --qryDTO.getLatitudeUnit() ps.setDouble(4,
-			 * qryDTO.getLongitudeUnit()); // hardcoded
-			 * -qryDTO.getLongitudeUnit() ps.setString(5,
-			 * qryDTO.getBoundingBox()); // hardcoded--not there in grouping
-			 * //ps.setString(6, qryDTO.getQueryStatus()); //
-			 * hardcoded--qryDTO.getQueryStatus() if
-			 * (getQueryStatus(qryDTO.getqID())) { ps.setString(6,RUNNING); }
-			 * else { ps.setString(6,STOPPED); }
-			 * 
-			 * ps.setInt(7, firstInsrtedQryId); ps.setInt(8,
-			 * qryDTO.getQryCreatorId()); ps.setString(9,qryDTO.getQueryName());
-			 * // no entry in UI yet -- sanjukta
-			 * System.out.println("reghister query parenttt"); }else {
-			 * 
-			 * ps = connection.prepareStatement(INST_QRYMSTR_DEFAULT_QRY);
-			 * ps.setString(1, selectedQueryRun.trim()); ps.setInt(2,
-			 * (qryDTO.getTimeWindow() == null ||
-			 * qryDTO.getTimeWindow().equals("")
-			 * ?0:Integer.parseInt(qryDTO.getTimeWindow())));//55
-			 * ps.setDouble(3, qryDTO.getLatitudeUnit());//3.3 ps.setDouble(4,
-			 * qryDTO.getLongitudeUnit());//2.3 ps.setString(5,
-			 * qryDTO.getBoundingBox()); //ps.setString(6,
-			 * qryDTO.getQueryStatus()); // if (getQueryStatus(qryDTO.getqID()))
-			 * { // ps.setString(6,RUNNING); // } else {
-			 * ps.setString(6,STOPPED); // }
-			 * 
-			 * ps.setInt(7, qryDTO.getQryCreatorId());
-			 * ps.setString(8,qryDTO.getQueryName()); // no entry in UI yet --
-			 * sanjukta System.out.println("reghister query chilldd"); }
-			 */
+         /*
+          * //child if (firstInsrtedQryId != 0) { ps =
+          * connection.prepareStatement(INST_QRYMSTR_QRY);
+          * 
+          * ps.setString(1, selectedQueryRun.trim()); // esql ps.setInt(2,
+          * (qryDTO.getTimeWindow() == null ||
+          * qryDTO.getTimeWindow().equals("")
+          * ?0:Integer.parseInt(qryDTO.getTimeWindow()))); //
+          * hardcoded--Integer.parseInt(qryDTO.getTimeWindow())
+          * ps.setDouble(3, qryDTO.getLatitudeUnit()); // hardcoded
+          * --qryDTO.getLatitudeUnit() ps.setDouble(4,
+          * qryDTO.getLongitudeUnit()); // hardcoded
+          * -qryDTO.getLongitudeUnit() ps.setString(5,
+          * qryDTO.getBoundingBox()); // hardcoded--not there in grouping
+          * //ps.setString(6, qryDTO.getQueryStatus()); //
+          * hardcoded--qryDTO.getQueryStatus() if
+          * (getQueryStatus(qryDTO.getqID())) { ps.setString(6,RUNNING); }
+          * else { ps.setString(6,STOPPED); }
+          * 
+          * ps.setInt(7, firstInsrtedQryId); ps.setInt(8,
+          * qryDTO.getQryCreatorId()); ps.setString(9,qryDTO.getQueryName());
+          * // no entry in UI yet -- sanjukta
+          * System.out.println("reghister query parenttt"); }else {
+          * 
+          * ps = connection.prepareStatement(INST_QRYMSTR_DEFAULT_QRY);
+          * ps.setString(1, selectedQueryRun.trim()); ps.setInt(2,
+          * (qryDTO.getTimeWindow() == null ||
+          * qryDTO.getTimeWindow().equals("")
+          * ?0:Integer.parseInt(qryDTO.getTimeWindow())));//55
+          * ps.setDouble(3, qryDTO.getLatitudeUnit());//3.3 ps.setDouble(4,
+          * qryDTO.getLongitudeUnit());//2.3 ps.setString(5,
+          * qryDTO.getBoundingBox()); //ps.setString(6,
+          * qryDTO.getQueryStatus()); // if (getQueryStatus(qryDTO.getqID()))
+          * { // ps.setString(6,RUNNING); // } else {
+          * ps.setString(6,STOPPED); // }
+          * 
+          * ps.setInt(7, qryDTO.getQryCreatorId());
+          * ps.setString(8,qryDTO.getQueryName()); // no entry in UI yet --
+          * sanjukta System.out.println("reghister query chilldd"); }
+          */
 
 			ps.executeUpdate();
 			ResultSet rs = ps.getGeneratedKeys();
@@ -205,9 +221,9 @@ public class QueryListDAO extends BaseDAO {
 		return lastQryId;
 	}
 
-	/*
-	 * This method return the QryEsql
-	 */
+   /*
+    * This method return the QryEsql
+    */
 
 	public String getQryEsql(int qID) {
 		PreparedStatement ps = null;
@@ -228,9 +244,9 @@ public class QueryListDAO extends BaseDAO {
 		return qryEsql;
 	}
 
-	/*
-	 * This method frame the FrameParametr for query
-	 */
+   /*
+    * This method frame the FrameParametr for query
+    */
 
 	public FrameParameters getFrameParameterQry(int qryId) {
 		// FrameParameters fp = new FrameParameters(timeWindow, syncAtMilliSec,
@@ -325,7 +341,7 @@ public class QueryListDAO extends BaseDAO {
 			fileExtn = WINEXECFILEEXTN;
 		}
 		String filePath = Config.getProperty("context")
-//				+ "proc/Debug/EmageOperators_Q" + qid + "_1" + fileExtn;
+//          + "proc/Debug/EmageOperators_Q" + qid + "_1" + fileExtn;
 				+ "temp/queries/" + "Q" + qid + ".json";
 		File file = new File(filePath);
 		// log.info("check query status " + filePath + ", " + file.exists());
@@ -358,13 +374,13 @@ public class QueryListDAO extends BaseDAO {
 		return qryEsql;
 	}
 
-	/*
-	 * // not being used?? public QueryProcess parseQueryTree(int qid_parent) {
-	 * QueryProcess aQuery = new QueryProcess(Config.getProperty("context"));
-	 * //QueryJSONParser parser = new QueryJSONParser(); //List<String>
-	 * queryTree = this.getQueryTree(qid_parent); //aQuery =
-	 * parser.parseQuery(queryTree); return aQuery; }
-	 */
+   /*
+    * // not being used?? public QueryProcess parseQueryTree(int qid_parent) {
+    * QueryProcess aQuery = new QueryProcess(Config.getProperty("context"));
+    * //QueryJSONParser parser = new QueryJSONParser(); //List<String>
+    * queryTree = this.getQueryTree(qid_parent); //aQuery =
+    * parser.parseQuery(queryTree); return aQuery; }
+    */
 
 	// used by registerServlet
 	public List<com.eventshop.eventshoplinux.model.Query> getAllQuery() {

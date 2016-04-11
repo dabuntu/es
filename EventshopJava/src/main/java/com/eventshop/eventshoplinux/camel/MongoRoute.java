@@ -239,7 +239,7 @@ public class MongoRoute extends RouteBuilder {
                         exchange.getOut().setHeader("createEmageFile", false);
                     }
                 })
-                .to("direct:applyandExecuteRule")
+//                .to("direct:applyandExecuteRule")
                 .to("direct:applySpatialWrapper");
 
         from("direct:applySpatialWrapper")
