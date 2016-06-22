@@ -204,13 +204,6 @@ ALTER TABLE `Datasource_Resolution`
   ADD CONSTRAINT `Datasource_Resolution_ibfk_1` FOREIGN KEY (`dsmaster_id`) REFERENCES `Datasource_Master` (`dsmaster_id`);
 
 --
--- Constraints for table `Query_Datasource`
---
-ALTER TABLE `Query_Datasource`
-  ADD CONSTRAINT `query_datasource_ibfk_1` FOREIGN KEY (`query_id`) REFERENCES `Query_Master` (`query_id`),
-  ADD CONSTRAINT `query_datasource_ibfk_2` FOREIGN KEY (`datasource_id`) REFERENCES `Datasource_Master` (`dsmaster_id`);
-
---
 -- Constraints for table `Query_Master`
 --
 ALTER TABLE `Query_Master`
